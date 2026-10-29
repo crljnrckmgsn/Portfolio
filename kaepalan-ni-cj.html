@@ -1,0 +1,1363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>My Favourite Person 🌸</title>
+
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌸</text></svg>"/>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌸</text></svg>"/>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Poppins:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --dp:#6B0F40;--dk:#C2185B;--md:#E91E8C;--br:#FF4FA7;
+  --sf:#FF80C0;--lt:#FFB3D9;--pl:#FFD6EC;--bl:#FFF5FB;--wh:#fff;
+  --cream:#FFF9FC;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bl);font-family:'Poppins',sans-serif;color:var(--dp);overflow-x:hidden;cursor:none;min-height:100vh}
+
+/* ═══ CURSOR ═══ */
+#cursor{position:fixed;top:0;left:0;z-index:999999;pointer-events:none;width:36px;height:36px;transform:translate(-50%,-50%);transition:width .15s,height .15s}
+#cursor .cur-heart{width:100%;height:100%;filter:drop-shadow(0 2px 6px rgba(233,30,140,.55));transition:transform .12s}
+#cursor.click .cur-heart{transform:scale(.5)}
+#cursor.bigmode{width:52px;height:52px}
+#cursor-trail{position:fixed;top:0;left:0;pointer-events:none;z-index:999990}
+.trail-dot{position:absolute;border-radius:50%;pointer-events:none;animation:trailFade .6s ease-out forwards}
+@keyframes trailFade{0%{opacity:.7;transform:translate(-50%,-50%) scale(1)}100%{opacity:0;transform:translate(-50%,-50%) scale(0)}}
+
+/* ═══ FLY HEARTS ═══ */
+.fly-h{position:fixed;pointer-events:none;z-index:99990;animation:flyOff .95s ease-out forwards;line-height:1}
+@keyframes flyOff{0%{opacity:1;transform:translate(0,0) scale(1)}100%{opacity:0;transform:translate(var(--tx),var(--ty)) scale(.2)}}
+
+/* ═══ CONFETTI ═══ */
+#cw{position:fixed;inset:0;pointer-events:none;z-index:99980;overflow:hidden}
+@keyframes cfall{0%{transform:translateY(0) rotateZ(0);opacity:1}100%{transform:translateY(110vh) rotateZ(720deg);opacity:0}}
+
+/* ═══ BG FLOATERS ═══ */
+#bgf{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+@keyframes bgfl{0%{transform:translateY(0) rotate(-5deg);opacity:.13}100%{transform:translateY(-115vh) rotate(360deg);opacity:0}}
+
+/* ═══ TOOLTIP ═══ */
+#tip{position:fixed;z-index:99970;background:var(--dk);color:#fff;padding:.3rem .9rem;border-radius:20px;font-size:.76rem;font-weight:600;pointer-events:none;opacity:0;transition:opacity .18s;white-space:nowrap;box-shadow:0 4px 14px rgba(0,0,0,.18)}
+#tip.on{opacity:1}
+
+/* ═══ REVEAL ═══ */
+.reveal{opacity:0;transform:translateY(32px);transition:opacity .7s ease,transform .7s ease}
+.reveal.vis{opacity:1;transform:translateY(0)}
+
+/* ═══ SECTION COMMONS ═══ */
+.sec-lbl{font-weight:600;font-size:.72rem;letter-spacing:.24em;text-transform:uppercase;color:var(--md);margin-bottom:.65rem}
+.sec-ttl{font-family:'Bebas Neue',sans-serif;font-size:clamp(2.6rem,6.5vw,5rem);color:var(--dk);letter-spacing:.05em;margin-bottom:2.6rem;line-height:1.05}
+section{position:relative;z-index:1}
+.wave{position:absolute;left:0;width:100%;pointer-events:none;z-index:2}
+
+/* ════════════════════════════════
+   ██  HERO
+════════════════════════════════ */
+#hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;overflow:hidden;
+  background:linear-gradient(150deg,#ffe4f2 0%,#ffbedd 45%,#ffa8d4 100%)}
+
+/* Ribbon decorations */
+.rib-top{position:absolute;top:0;left:0;width:100%;z-index:3;pointer-events:none}
+.rib-side-l{position:absolute;left:0;top:0;height:100%;z-index:3;pointer-events:none;width:70px}
+.rib-side-r{position:absolute;right:0;top:0;height:100%;z-index:3;pointer-events:none;width:70px;transform:scaleX(-1)}
+
+/* Animated bear */
+.hbear{position:absolute;pointer-events:none;animation:bearBob ease-in-out infinite alternate;z-index:4;user-select:none;line-height:1}
+@keyframes bearBob{0%{transform:translateY(0) rotate(-5deg)}100%{transform:translateY(-20px) rotate(5deg)}}
+.hbear.spin{animation:bearSpin 8s linear infinite}
+@keyframes bearSpin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+
+.spk{position:absolute;pointer-events:none;color:var(--dk);animation:spkAnim 2.5s ease-in-out infinite alternate;font-style:normal;z-index:3}
+@keyframes spkAnim{0%{opacity:.25;transform:scale(.7) rotate(0deg)}100%{opacity:.85;transform:scale(1.35) rotate(30deg)}}
+
+/* Hero content */
+.hero-inner{position:relative;z-index:5}
+.hero-badge{display:inline-block;font-weight:600;font-size:.78rem;letter-spacing:.18em;text-transform:uppercase;color:var(--dp);
+  background:rgba(255,255,255,.78);border:2px solid var(--lt);border-radius:50px;padding:.45rem 1.5rem;
+  margin-bottom:1.4rem;backdrop-filter:blur(8px);animation:hfd .8s ease both;box-shadow:0 4px 20px rgba(194,24,91,.15)}
+.hero-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(4.5rem,15vw,11rem);line-height:.9;color:var(--dk);
+  letter-spacing:.04em;text-shadow:5px 5px 0 var(--br),9px 9px 0 rgba(255,79,167,.18);animation:hfd .9s .1s ease both}
+.hero-title .ol{-webkit-text-stroke:3px var(--dk);color:transparent}
+.hero-sub{font-size:clamp(.92rem,2vw,1.1rem);color:var(--dp);opacity:.88;max-width:36ch;line-height:1.78;
+  margin:1.4rem auto 2.2rem;font-weight:300;animation:hfd 1s .2s ease both}
+.hero-btn{display:inline-block;font-weight:600;font-size:.92rem;letter-spacing:.07em;text-transform:uppercase;
+  text-decoration:none;color:#fff;background:linear-gradient(135deg,var(--md),var(--dk));
+  padding:.9rem 2.6rem;border-radius:50px;border:none;cursor:none;
+  box-shadow:0 6px 28px rgba(233,30,140,.45);transition:transform .2s,box-shadow .2s;animation:hfd 1s .3s ease both}
+.hero-btn:hover{transform:translateY(-4px) scale(1.06);box-shadow:0 14px 38px rgba(233,30,140,.55)}
+.scroll-hint{position:absolute;bottom:1.8rem;font-size:.76rem;letter-spacing:.14em;color:var(--dk);opacity:.58;
+  animation:bounce 1.8s infinite;z-index:5;pointer-events:none}
+@keyframes hfd{from{opacity:0;transform:translateY(-24px)}to{opacity:1;transform:translateY(0)}}
+@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(8px)}}
+
+/* ════════════════════════════════
+   ██  REASONS
+════════════════════════════════ */
+#reasons{padding:6rem 2rem 7rem;background:linear-gradient(180deg,#ffdaee 0%,#ffecf6 100%);text-align:center;overflow:hidden}
+.cards-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(225px,1fr));gap:1.4rem;max-width:960px;margin:0 auto;position:relative;z-index:1}
+.card{background:rgba(255,255,255,.82);border:2.5px solid var(--lt);border-radius:26px;padding:2rem 1.6rem;
+  backdrop-filter:blur(10px);cursor:none;transition:transform .3s,box-shadow .3s;text-align:left;position:relative;overflow:hidden}
+.card:hover{transform:translateY(-9px) rotate(-1.5deg);box-shadow:0 22px 52px rgba(194,24,91,.22)}
+.card:active{transform:scale(.97)}
+.card-rb{position:absolute;top:0;right:0;width:54px;height:54px;pointer-events:none}
+.card-icon{font-size:2.6rem;margin-bottom:.8rem;display:block;transition:transform .3s}
+.card:hover .card-icon{transform:scale(1.2) rotate(-8deg)}
+.card-ttl{font-family:'Bebas Neue',sans-serif;font-size:1.58rem;color:var(--dk);letter-spacing:.05em;margin-bottom:.4rem}
+.card-txt{font-size:.86rem;line-height:1.68;font-weight:300;color:var(--dp);opacity:.88}
+.card-clicked{position:absolute;inset:0;background:rgba(255,64,167,.08);border-radius:24px;animation:cardFlash .4s ease-out forwards;pointer-events:none}
+@keyframes cardFlash{0%{opacity:1}100%{opacity:0}}
+
+/* ════════════════════════════════
+   ██  LOVE LETTER (ENVELOPE)
+════════════════════════════════ */
+#envelope-sec{padding:6rem 2rem 7rem;background:linear-gradient(160deg,#ffecf6 0%,#ffd4e8 100%);text-align:center;overflow:hidden}
+.envelope-wrap{position:relative;width:340px;margin:0 auto;cursor:none;user-select:none}
+.envelope{width:340px;height:220px;position:relative;z-index:2}
+.env-body{width:100%;height:100%;background:linear-gradient(160deg,#ff80c0,#ff4fa7);border-radius:8px 8px 20px 20px;
+  position:relative;overflow:visible;box-shadow:0 12px 40px rgba(194,24,91,.35);cursor:none;transition:transform .2s}
+.env-body:hover{transform:scale(1.02)}
+.env-flap{position:absolute;top:0;left:0;width:0;height:0;
+  border-left:170px solid transparent;border-right:170px solid transparent;border-top:110px solid #e91e8c;
+  transform-origin:top center;transition:transform .6s cubic-bezier(.25,1,.5,1);z-index:5;filter:drop-shadow(0 3px 6px rgba(0,0,0,.1))}
+.env-flap.open{transform:rotateX(180deg)}
+.env-bottom{position:absolute;bottom:0;left:0;width:0;height:0;
+  border-left:170px solid transparent;border-right:170px solid transparent;border-bottom:100px solid #ff80c0;z-index:1}
+.env-left{position:absolute;left:0;top:0;width:0;height:0;border-top:110px solid transparent;border-bottom:110px solid transparent;border-left:155px solid #ff9ecb;z-index:1;opacity:.5}
+.env-right{position:absolute;right:0;top:0;width:0;height:0;border-top:110px solid transparent;border-bottom:110px solid transparent;border-right:155px solid #ff9ecb;z-index:1;opacity:.5}
+.env-seal{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:2.8rem;z-index:6;transition:transform .5s,opacity .5s}
+.env-seal.hide{transform:translate(-50%,-50%) scale(0);opacity:0}
+.env-hint{font-size:.82rem;color:var(--dp);opacity:.6;margin-top:1rem;font-style:italic}
+.env-btn{margin-top:1rem;background:linear-gradient(135deg,var(--br),var(--md));color:#fff;border:none;
+  padding:.7rem 2rem;border-radius:50px;font-family:'Poppins',sans-serif;font-weight:600;font-size:.88rem;
+  cursor:none;transition:transform .2s;box-shadow:0 5px 20px rgba(233,30,140,.35)}
+.env-btn:hover{transform:scale(1.07)}
+/* LETTER MODAL */
+#letterModal{position:fixed;inset:0;z-index:999900;display:flex;align-items:center;justify-content:center;
+  background:rgba(107,15,64,.45);backdrop-filter:blur(6px);opacity:0;pointer-events:none;transition:opacity .4s ease}
+#letterModal.open{opacity:1;pointer-events:auto}
+.letter-card{background:linear-gradient(160deg,#fff9fc,#fff0f8);border:2.5px solid var(--lt);border-radius:24px;
+  padding:2.2rem 2rem;width:min(500px,92vw);max-height:88vh;overflow-y:auto;box-shadow:0 24px 64px rgba(107,15,64,.35);text-align:center;position:relative;
+  transform:translateY(40px) scale(.92);transition:transform .5s cubic-bezier(.22,1,.36,1)}
+#letterModal.open .letter-card{transform:translateY(0) scale(1)}
+.letter-close{position:absolute;top:14px;right:16px;background:var(--pl);border:2px solid var(--lt);
+  border-radius:50%;width:34px;height:34px;font-size:1.1rem;cursor:none;line-height:1;
+  display:flex;align-items:center;justify-content:center;transition:background .2s,transform .2s}
+.letter-close:hover{background:var(--lt);transform:scale(1.15)}
+.letter-top-icon{font-size:3rem;display:block;margin-bottom:1rem}
+.letter-txt{font-size:.78rem;line-height:1.75;font-weight:300;color:var(--dp);font-style:italic}
+.letter-sign{font-size:.92rem;font-weight:600;color:var(--md);margin-top:1.2rem}
+.letter-deco{display:flex;justify-content:center;gap:.5rem;margin-top:1rem;font-size:1.5rem}
+
+/* ════════════════════════════════
+   ██  LOVE METER
+════════════════════════════════ */
+#meter{padding:6rem 2rem;background:linear-gradient(160deg,#ffecf6 0%,#ffd4e8 100%);text-align:center;overflow:hidden}
+.meter-track{background:var(--lt);border-radius:50px;height:30px;overflow:hidden;
+  box-shadow:inset 0 3px 8px rgba(0,0,0,.1);max-width:560px;margin:0 auto 1rem;position:relative}
+.meter-fill{height:100%;width:0%;background:linear-gradient(90deg,#ffb3d9,var(--md),var(--dk));
+  border-radius:50px;transition:width 2s cubic-bezier(.25,1,.5,1);position:relative}
+.meter-fill::after{content:'💗';position:absolute;right:0;top:50%;transform:translateY(-50%);
+  font-size:1.2rem;animation:hbt .5s ease infinite alternate}
+@keyframes hbt{from{transform:translateY(-50%) scale(.85)}to{transform:translateY(-50%) scale(1.3)}}
+.meter-pct{font-family:'Bebas Neue',sans-serif;font-size:5rem;color:var(--dk);letter-spacing:.04em;margin:.3rem 0 0}
+.meter-msg{font-size:.9rem;font-weight:500;color:var(--dp);margin-bottom:1.6rem;min-height:1.4em}
+.meter-btn{background:linear-gradient(135deg,var(--br),var(--md));color:#fff;border:none;padding:.82rem 2.4rem;
+  border-radius:50px;font-family:'Poppins',sans-serif;font-weight:600;font-size:.92rem;cursor:none;
+  box-shadow:0 6px 24px rgba(233,30,140,.42);transition:transform .2s,box-shadow .2s}
+.meter-btn:hover{transform:scale(1.08);box-shadow:0 12px 32px rgba(233,30,140,.55)}
+.bears-row{display:flex;justify-content:center;gap:1rem;margin-bottom:1.5rem}
+.bears-row span{font-size:2.8rem;animation:bearBob 2s ease-in-out infinite alternate}
+.bears-row span:nth-child(2){animation-delay:.3s}
+.bears-row span:nth-child(3){animation-delay:.6s}
+
+/* ════════════════════════════════
+   ██  MUSIC BOX
+════════════════════════════════ */
+#musicbox{padding:6rem 2rem;background:linear-gradient(180deg,#ffd4e8 0%,#ffbedd 100%);text-align:center;overflow:hidden}
+.music-player{max-width:420px;margin:0 auto;background:rgba(255,255,255,.82);border:2.5px solid var(--lt);
+  border-radius:32px;padding:2.5rem 2rem;backdrop-filter:blur(12px);box-shadow:0 14px 48px rgba(194,24,91,.18)}
+.music-disc{width:140px;height:140px;margin:0 auto 1.6rem;border-radius:50%;position:relative;cursor:none}
+.disc-img{width:100%;height:100%;border-radius:50%;object-fit:cover;display:block}
+.disc-overlay{position:absolute;inset:0;border-radius:50%;background:rgba(233,30,140,.18)}
+.disc-center{position:absolute;top:50%;left:50%;width:28px;height:28px;background:#fff;
+  border-radius:50%;transform:translate(-50%,-50%);border:3px solid var(--lt);box-shadow:0 0 0 6px rgba(255,128,192,.25)}
+.music-disc.playing{animation:spin 4s linear infinite}
+@keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+.music-disc.playing .disc-center{animation:none;transform:translate(-50%,-50%)}
+.music-title{font-family:'Bebas Neue',sans-serif;font-size:1.8rem;color:var(--dk);letter-spacing:.05em;margin-bottom:.2rem}
+.music-sub{font-size:.82rem;color:var(--dp);opacity:.7;margin-bottom:1.4rem;font-weight:300}
+.music-controls{display:flex;align-items:center;justify-content:center;gap:1rem;margin-bottom:1.2rem}
+.mc-btn{width:46px;height:46px;border-radius:50%;border:none;cursor:none;display:flex;align-items:center;justify-content:center;
+  font-size:1.2rem;transition:transform .2s,background .2s}
+.mc-btn.prev,.mc-btn.next{background:var(--pl);color:var(--dk)}
+.mc-btn.prev:hover,.mc-btn.next:hover{background:var(--lt);transform:scale(1.1)}
+.mc-btn.play{background:linear-gradient(135deg,var(--md),var(--dk));color:#fff;width:58px;height:58px;font-size:1.6rem;
+  box-shadow:0 6px 22px rgba(233,30,140,.4)}
+.mc-btn.play:hover{transform:scale(1.12);box-shadow:0 10px 30px rgba(233,30,140,.55)}
+.music-bar{display:flex;gap:3px;align-items:flex-end;justify-content:center;height:36px}
+.bar{width:5px;background:var(--lt);border-radius:3px;transition:height .2s}
+.bar.active{background:linear-gradient(to top,var(--br),var(--md));animation:barAnim var(--d) ease-in-out infinite alternate}
+@keyframes barAnim{0%{height:6px}100%{height:var(--h)}}
+.music-note-burst{position:absolute;pointer-events:none;font-size:1.4rem;animation:notePop 1.2s ease-out forwards}
+@keyframes notePop{0%{opacity:1;transform:translate(-50%,-50%) scale(1)}100%{opacity:0;transform:translate(calc(-50% + var(--nx)),calc(-50% + var(--ny))) scale(.4)}}
+
+/* ════════════════════════════════
+   ██  QUIZ
+════════════════════════════════ */
+#quiz{padding:6rem 2rem;background:linear-gradient(160deg,#ffbedd 0%,#ffd4e8 100%);text-align:center;overflow:hidden}
+.quiz-box{max-width:580px;margin:0 auto;background:rgba(255,255,255,.83);border:2.5px solid var(--lt);
+  border-radius:30px;padding:2.8rem 2.2rem;backdrop-filter:blur(12px);box-shadow:0 14px 44px rgba(194,24,91,.15)}
+.quiz-bear{font-size:3.5rem;display:block;margin-bottom:.8rem;animation:bearBob 2s ease-in-out infinite alternate}
+.qscore{font-family:'Bebas Neue',sans-serif;font-size:2.2rem;color:var(--dk);margin-bottom:.6rem}
+.qq{font-size:1.02rem;font-weight:500;color:var(--dp);margin-bottom:1.6rem;min-height:3.2em;line-height:1.65}
+.qopts{display:flex;flex-direction:column;gap:.72rem}
+.qopt{background:var(--pl);border:2px solid var(--lt);border-radius:50px;padding:.78rem 1.5rem;
+  font-family:'Poppins',sans-serif;font-size:.88rem;font-weight:500;color:var(--dp);
+  cursor:none;transition:all .22s;text-align:left;position:relative;overflow:hidden}
+.qopt::before{content:'';position:absolute;inset:0;background:var(--md);transform:scaleX(0);transform-origin:left;transition:transform .22s;z-index:0}
+.qopt:hover{color:#fff;border-color:var(--md);transform:translateX(8px)}
+.qopt:hover::before{transform:scaleX(1)}
+.qopt span{position:relative;z-index:1}
+.qopt.correct{background:#4CAF50!important;color:#fff!important;border-color:#4CAF50!important}
+.qopt.correct::before{display:none}
+.qopt.wrong{background:#e91e63!important;color:#fff!important;border-color:#e91e63!important}
+.qopt.wrong::before{display:none}
+.qres{font-size:.95rem;font-weight:600;color:var(--dk);margin-top:1rem;min-height:1.5em}
+.qnxt{margin-top:.9rem;background:linear-gradient(135deg,var(--md),var(--dk));color:#fff;border:none;
+  padding:.72rem 2.1rem;border-radius:50px;font-family:'Poppins',sans-serif;font-weight:600;font-size:.88rem;
+  cursor:none;transition:transform .2s;display:none;box-shadow:0 5px 18px rgba(233,30,140,.35)}
+.qnxt:hover{transform:scale(1.07)}
+
+/* ════════════════════════════════
+   ██  SCRATCH CARD
+════════════════════════════════ */
+#scratch{padding:6rem 2rem;background:linear-gradient(180deg,#ffd4e8 0%,#ffecf6 100%);text-align:center;overflow:hidden}
+.scratch-wrap{position:relative;width:340px;height:200px;margin:2rem auto;border-radius:22px;overflow:hidden;cursor:none;
+  box-shadow:0 12px 38px rgba(194,24,91,.28)}
+.scratch-msg{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  background:linear-gradient(135deg,#ffe0ef,#ffc2dc);font-size:1rem;font-weight:600;color:var(--dk);padding:1.4rem;
+  line-height:1.65;z-index:0;text-align:center;gap:.3rem}
+#sCanvas{position:absolute;inset:0;z-index:2;border-radius:22px;cursor:none}
+.scratch-pct{font-size:.82rem;color:var(--dp);opacity:.6;margin-top:.5rem;font-style:italic}
+.scratch-rst{margin-top:.9rem;background:var(--pl);border:2.5px solid var(--lt);border-radius:50px;
+  padding:.52rem 1.6rem;font-family:'Poppins',sans-serif;font-size:.82rem;font-weight:600;color:var(--dk);
+  cursor:none;transition:background .2s,transform .2s}
+.scratch-rst:hover{background:var(--lt);transform:scale(1.05)}
+
+/* ════════════════════════════════
+   ██  VIRTUAL BEAR DRESS-UP
+════════════════════════════════ */
+#dressup{padding:6rem 2rem;background:linear-gradient(160deg,#ffecf6 0%,#ffdaee 100%);text-align:center;overflow:hidden}
+.dressup-stage{display:flex;flex-wrap:wrap;gap:2rem;justify-content:center;align-items:flex-start;max-width:800px;margin:0 auto}
+.bear-display{background:rgba(255,255,255,.82);border:2.5px solid var(--lt);border-radius:28px;
+  padding:2rem 2.5rem;flex:0 0 auto;min-width:260px;backdrop-filter:blur(10px);
+  box-shadow:0 12px 40px rgba(194,24,91,.16)}
+.bear-stage-inner{font-size:6rem;line-height:1;position:relative;display:inline-block;user-select:none;
+  cursor:none;transition:transform .3s}
+.bear-stage-inner:hover{transform:scale(1.08) rotate(-3deg)}
+.bear-hat{position:absolute;top:-35px;left:50%;transform:translateX(-50%);font-size:2.2rem;transition:all .3s}
+.bear-acc{position:absolute;bottom:-10px;left:50%;transform:translateX(-50%);font-size:1.8rem;transition:all .3s}
+.bear-l{position:absolute;top:30%;left:-40px;font-size:1.8rem;transition:all .3s}
+.bear-r{position:absolute;top:30%;right:-40px;font-size:1.8rem;transition:all .3s}
+.bear-name{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;color:var(--dk);margin-top:1rem;letter-spacing:.05em}
+.dress-panels{flex:1;min-width:260px}
+.dress-category{margin-bottom:1rem;text-align:left}
+.dress-cat-lbl{font-size:.72rem;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--md);margin-bottom:.5rem}
+.dress-options{display:flex;flex-wrap:wrap;gap:.5rem}
+.dress-opt{background:rgba(255,255,255,.82);border:2px solid var(--lt);border-radius:14px;
+  padding:.4rem .7rem;font-size:1.4rem;cursor:none;transition:all .2s;position:relative}
+.dress-opt:hover{background:var(--pl);transform:scale(1.1) rotate(-5deg);border-color:var(--md)}
+.dress-opt.active{background:var(--pl);border-color:var(--md);transform:scale(1.05)}
+.dress-opt[title]:hover::after{content:attr(title);position:absolute;bottom:calc(100% + 6px);left:50%;
+  transform:translateX(-50%);background:var(--dk);color:#fff;font-size:.7rem;font-family:'Poppins',sans-serif;
+  padding:.2rem .6rem;border-radius:8px;white-space:nowrap;pointer-events:none}
+
+/* ════════════════════════════════
+   ██  MOOD BUTTON
+════════════════════════════════ */
+#moodboard{padding:6rem 2rem;background:linear-gradient(180deg,#ffdaee 0%,#ffc8e0 100%);text-align:center;overflow:hidden}
+.mood-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1rem;max-width:720px;margin:2rem auto 0}
+.mood-btn{background:rgba(255,255,255,.82);border:2.5px solid var(--lt);border-radius:22px;padding:1.4rem 1rem;
+  cursor:none;transition:transform .25s,box-shadow .25s,background .25s;backdrop-filter:blur(8px)}
+.mood-btn:hover{transform:translateY(-6px) scale(1.04);box-shadow:0 16px 38px rgba(194,24,91,.2);background:rgba(255,255,255,.96)}
+.mood-btn:active{transform:scale(.96)}
+.mood-icon{font-size:2.8rem;display:block;margin-bottom:.5rem;transition:transform .3s}
+.mood-btn:hover .mood-icon{transform:scale(1.15) rotate(-8deg)}
+.mood-label{font-size:.78rem;font-weight:600;color:var(--dk);letter-spacing:.05em;text-transform:uppercase}
+.mood-response{min-height:5rem;max-width:520px;margin:1.8rem auto 0;background:rgba(255,255,255,.82);
+  border:2px solid var(--lt);border-radius:20px;padding:1.2rem 1.6rem;
+  font-size:.92rem;font-weight:400;color:var(--dp);line-height:1.7;backdrop-filter:blur(8px);
+  transition:all .3s;opacity:0;transform:translateY(10px)}
+.mood-response.show{opacity:1;transform:translateY(0)}
+
+/* ════════════════════════════════
+   ██  COUNTING SECTION
+════════════════════════════════ */
+#counting{padding:6rem 2rem;background:linear-gradient(160deg,#ffc8e0 0%,#ffb4d6 100%);text-align:center;overflow:hidden}
+.counts-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:1.2rem;max-width:800px;margin:0 auto}
+.count-card{background:rgba(255,255,255,.82);border:2.5px solid var(--lt);border-radius:24px;
+  padding:1.8rem 1rem;backdrop-filter:blur(10px);cursor:none;transition:transform .3s,box-shadow .3s}
+.count-card:hover{transform:translateY(-7px);box-shadow:0 18px 44px rgba(194,24,91,.2)}
+.count-icon{font-size:2.2rem;display:block;margin-bottom:.5rem;animation:bearBob 2.5s ease-in-out infinite alternate}
+.count-num{font-family:'Bebas Neue',sans-serif;font-size:3.2rem;color:var(--dk);line-height:1;letter-spacing:.04em}
+.count-lbl{font-size:.78rem;font-weight:500;color:var(--dp);opacity:.8;margin-top:.3rem;letter-spacing:.06em;text-transform:uppercase}
+.count-card:nth-child(2) .count-icon{animation-delay:.3s}
+.count-card:nth-child(3) .count-icon{animation-delay:.6s}
+.count-card:nth-child(4) .count-icon{animation-delay:.9s}
+
+/* ════════════════════════════════
+   ██  LOVE NOTE + STICKERS
+════════════════════════════════ */
+#note{padding:7rem 2rem;background:linear-gradient(160deg,#ffb4d6 0%,#ffd4e8 100%);text-align:center;overflow:hidden}
+.note-card{max-width:620px;margin:2rem auto 0;background:rgba(255,255,255,.84);
+  border:2.5px solid var(--lt);border-radius:30px;padding:3.2rem 2.6rem;
+  backdrop-filter:blur(14px);box-shadow:0 16px 56px rgba(194,24,91,.15);position:relative}
+.note-card::before{content:'💌';position:absolute;top:-26px;left:50%;transform:translateX(-50%);font-size:3rem}
+.note-txt{font-size:1rem;line-height:1.95;font-weight:300;color:var(--dp);font-style:italic}
+.note-sign{margin-top:1.8rem;font-weight:600;font-size:.95rem;color:var(--md)}
+.sticker{position:absolute;font-size:2.6rem;cursor:none;user-select:none;z-index:10;
+  transition:transform .15s;filter:drop-shadow(2px 3px 8px rgba(0,0,0,.18));touch-action:none}
+.sticker:hover{transform:scale(1.3) rotate(12deg)!important}
+.sticker.dragging{transform:scale(1.4)!important;z-index:9999}
+.sticker-tray{display:flex;flex-wrap:wrap;justify-content:center;gap:.6rem;
+  max-width:620px;margin:1.4rem auto 0}
+.stray-item{font-size:1.8rem;cursor:none;padding:.4rem .6rem;background:rgba(255,255,255,.8);
+  border:2px solid var(--lt);border-radius:12px;transition:transform .2s,background .2s;user-select:none}
+.stray-item:hover{transform:scale(1.15) rotate(-5deg);background:var(--pl)}
+
+/* ════════════════════════════════
+   ██  FOOTER
+════════════════════════════════ */
+footer{padding:3.5rem 2rem;background:var(--dk);color:var(--pl);text-align:center;font-size:.85rem;font-weight:300;position:relative;overflow:hidden}
+footer .ftxt{position:relative;z-index:1}
+footer span{color:var(--br)}
+.footer-bears{display:flex;justify-content:center;gap:.8rem;margin-bottom:.8rem;font-size:1.6rem}
+</style>
+</head>
+<body>
+
+<!-- ── CURSOR ── -->
+<div id="cursor">
+  <svg class="cur-heart" viewBox="0 0 36 36" fill="none">
+    <path d="M18 31C18 31 4 22 4 12.5C4 7.8 7.8 4 12.5 4C15 4 17.2 5.1 18 6.5C18.8 5.1 21 4 23.5 4C28.2 4 32 7.8 32 12.5C32 22 18 31 18 31Z" fill="#E91E8C" stroke="#C2185B" stroke-width="1.5"/>
+  </svg>
+</div>
+<div id="cursor-trail"></div>
+<div id="cw"></div>
+<div id="bgf"></div>
+<div id="tip"></div>
+
+<!-- ═══════════════════════════════════
+     HERO
+═══════════════════════════════════ -->
+<section id="hero">
+
+  <!-- Top ribbon -->
+  <svg class="rib-top wave" style="top:0;z-index:3" viewBox="0 0 1440 130" preserveAspectRatio="none">
+    <path d="M0,0 L1440,0 L1440,40 Q1080,105 720,72 Q360,38 0,108 Z" fill="#C2185B" opacity=".16"/>
+    <path d="M0,0 L1440,0 L1440,25 Q1080,85 720,55 Q360,22 0,88 Z" fill="#E91E8C" opacity=".18"/>
+    <!-- Left bow -->
+    <g transform="translate(75,6)">
+      <ellipse cx="0" cy="18" rx="44" ry="17" fill="#FF4FA7" opacity=".9" transform="rotate(-27)"/>
+      <ellipse cx="0" cy="18" rx="44" ry="17" fill="#E91E8C" opacity=".84" transform="rotate(27)"/>
+      <circle cx="0" cy="0" r="13" fill="#FFD6EC"/><circle cx="0" cy="0" r="6" fill="#FF4FA7"/>
+      <line x1="-18" y1="30" x2="-35" y2="84" stroke="#FF80C0" stroke-width="3.5" stroke-linecap="round"/>
+      <line x1="18" y1="30" x2="36" y2="88" stroke="#FF80C0" stroke-width="3.5" stroke-linecap="round"/>
+    </g>
+    <!-- Center bow (big) -->
+    <g transform="translate(720,12)">
+      <ellipse cx="0" cy="0" rx="62" ry="23" fill="#FF80C0" opacity=".82" transform="rotate(-20)"/>
+      <ellipse cx="0" cy="0" rx="62" ry="23" fill="#FF4FA7" opacity=".78" transform="rotate(20)"/>
+      <circle cx="0" cy="0" r="17" fill="#FFD6EC"/><circle cx="0" cy="0" r="8" fill="#E91E8C"/>
+      <line x1="-24" y1="24" x2="-48" y2="92" stroke="#FFB3D9" stroke-width="4" stroke-linecap="round"/>
+      <line x1="24" y1="24" x2="50" y2="95" stroke="#FFB3D9" stroke-width="4" stroke-linecap="round"/>
+    </g>
+    <!-- Right bow -->
+    <g transform="translate(1365,6)">
+      <ellipse cx="0" cy="18" rx="44" ry="17" fill="#FF4FA7" opacity=".9" transform="rotate(-27)"/>
+      <ellipse cx="0" cy="18" rx="44" ry="17" fill="#E91E8C" opacity=".84" transform="rotate(27)"/>
+      <circle cx="0" cy="0" r="13" fill="#FFD6EC"/><circle cx="0" cy="0" r="6" fill="#FF4FA7"/>
+      <line x1="-18" y1="30" x2="-35" y2="84" stroke="#FF80C0" stroke-width="3.5" stroke-linecap="round"/>
+      <line x1="18" y1="30" x2="36" y2="88" stroke="#FF80C0" stroke-width="3.5" stroke-linecap="round"/>
+    </g>
+    <!-- Small bows -->
+    <g transform="translate(300,4)"><ellipse rx="28" ry="11" fill="#FFB3D9" opacity=".75" transform="rotate(-22)"/><ellipse rx="28" ry="11" fill="#FF80C0" opacity=".7" transform="rotate(22)"/><circle r="8" fill="#FFD6EC"/></g>
+    <g transform="translate(1140,4)"><ellipse rx="28" ry="11" fill="#FFB3D9" opacity=".75" transform="rotate(-22)"/><ellipse rx="28" ry="11" fill="#FF80C0" opacity=".7" transform="rotate(22)"/><circle r="8" fill="#FFD6EC"/></g>
+    <text x="480" y="32" font-size="20" opacity=".55">✨</text><text x="920" y="28" font-size="18" opacity=".5">🌸</text>
+    <text x="200" y="36" font-size="16" opacity=".45">💗</text><text x="1220" y="36" font-size="16" opacity=".45">💗</text>
+  </svg>
+
+  <!-- Side ribbons -->
+  <svg class="rib-side-l" viewBox="0 0 70 900" preserveAspectRatio="none">
+    <rect width="13" height="900" fill="#FF80C0" opacity=".22"/>
+    <rect x="15" width="6" height="900" fill="#FFB3D9" opacity=".28"/>
+    <g transform="translate(10,160)"><ellipse rx="21" ry="9" fill="#FF4FA7" opacity=".72" transform="rotate(-28)"/><ellipse rx="21" ry="9" fill="#E91E8C" opacity=".66" transform="rotate(28)"/><circle r="7" fill="#FFD6EC"/></g>
+    <g transform="translate(10,420)"><ellipse rx="21" ry="9" fill="#FF4FA7" opacity=".72" transform="rotate(-28)"/><ellipse rx="21" ry="9" fill="#E91E8C" opacity=".66" transform="rotate(28)"/><circle r="7" fill="#FFD6EC"/></g>
+    <g transform="translate(10,680)"><ellipse rx="21" ry="9" fill="#FF4FA7" opacity=".72" transform="rotate(-28)"/><ellipse rx="21" ry="9" fill="#E91E8C" opacity=".66" transform="rotate(28)"/><circle r="7" fill="#FFD6EC"/></g>
+  </svg>
+  <svg class="rib-side-r" viewBox="0 0 70 900" preserveAspectRatio="none">
+    <rect width="13" height="900" fill="#FF80C0" opacity=".22"/>
+    <rect x="15" width="6" height="900" fill="#FFB3D9" opacity=".28"/>
+    <g transform="translate(10,260)"><ellipse rx="21" ry="9" fill="#FF4FA7" opacity=".72" transform="rotate(-28)"/><ellipse rx="21" ry="9" fill="#E91E8C" opacity=".66" transform="rotate(28)"/><circle r="7" fill="#FFD6EC"/></g>
+    <g transform="translate(10,520)"><ellipse rx="21" ry="9" fill="#FF4FA7" opacity=".72" transform="rotate(-28)"/><ellipse rx="21" ry="9" fill="#E91E8C" opacity=".66" transform="rotate(28)"/><circle r="7" fill="#FFD6EC"/></g>
+    <g transform="translate(10,780)"><ellipse rx="21" ry="9" fill="#FF4FA7" opacity=".72" transform="rotate(-28)"/><ellipse rx="21" ry="9" fill="#E91E8C" opacity=".66" transform="rotate(28)"/><circle r="7" fill="#FFD6EC"/></g>
+  </svg>
+
+  <!-- Floating bears -->
+  <div class="hbear" style="left:4%;top:20%;font-size:5.5rem;animation-duration:3.2s;animation-delay:.3s">🧸</div>
+  <div class="hbear" style="right:5%;top:16%;font-size:6rem;animation-duration:2.8s;animation-delay:.8s">🧸</div>
+  <div class="hbear" style="left:13%;bottom:18%;font-size:3.4rem;animation-duration:3.6s">🌸</div>
+  <div class="hbear" style="right:12%;bottom:20%;font-size:3.2rem;animation-duration:3s;animation-delay:.6s">🌷</div>
+  <div class="hbear" style="left:28%;top:6%;font-size:2.4rem;animation-duration:4s;animation-delay:.2s">💗</div>
+  <div class="hbear" style="right:26%;top:8%;font-size:2.2rem;animation-duration:3.4s;animation-delay:1s">✨</div>
+  <div class="hbear" style="left:50%;top:3%;font-size:2rem;animation-duration:3.8s;animation-delay:.4s">🎀</div>
+  <div class="hbear" style="left:20%;top:50%;font-size:2rem;animation-duration:3.1s;animation-delay:1.2s">🌺</div>
+  <div class="hbear" style="right:19%;top:55%;font-size:2rem;animation-duration:3.5s;animation-delay:.9s">🌺</div>
+  <div class="hbear" style="left:38%;bottom:8%;font-size:2.5rem;animation-duration:2.9s;animation-delay:.5s">🍓</div>
+  <div class="hbear" style="right:35%;bottom:10%;font-size:2.5rem;animation-duration:3.3s;animation-delay:1.4s">🍰</div>
+
+  <!-- Sparkles -->
+  <em class="spk" style="left:23%;top:35%;font-size:1.7rem">✦</em>
+  <em class="spk" style="right:25%;top:40%;font-size:1.3rem;animation-delay:.9s">✦</em>
+  <em class="spk" style="left:44%;bottom:26%;font-size:1.1rem;animation-delay:.5s">✦</em>
+  <em class="spk" style="right:41%;bottom:24%;font-size:1.5rem;animation-delay:1.2s">✦</em>
+  <em class="spk" style="left:8%;top:45%;font-size:1.2rem;animation-delay:.7s">✦</em>
+  <em class="spk" style="right:7%;bottom:38%;font-size:1rem;animation-delay:1.5s">✦</em>
+
+  <div class="hero-inner">
+    <div class="hero-badge">🎀 A little something just for you 🎀</div>
+    <h1 class="hero-title">You Are<br><span class="ol">My</span> Person</h1>
+    <p class="hero-sub">Every single day with you feels like the most beautiful kind of magic I never knew I needed. 🌸</p>
+    <a href="#reasons" class="hero-btn" id="heroBtn">See Why I Love You 💗</a>
+  </div>
+  <div class="scroll-hint">↓ keep scrolling ↓</div>
+
+  <svg class="wave" style="bottom:0" viewBox="0 0 1440 70" preserveAspectRatio="none">
+    <path d="M0,70 L0,40 Q360,0 720,28 Q1080,58 1440,18 L1440,70 Z" fill="#ffdaee"/>
+  </svg>
+</section>
+
+<!-- ═══════════════════════════════════
+     REASONS
+═══════════════════════════════════ -->
+<section id="reasons">
+  <div style="position:absolute;right:-2%;top:5%;font-size:10rem;opacity:.07;pointer-events:none;z-index:0">🧸</div>
+  <div style="position:absolute;left:-1%;bottom:8%;font-size:9rem;opacity:.07;pointer-events:none;z-index:0">🧸</div>
+  <!-- Garland -->
+  <svg style="position:absolute;top:12px;left:0;width:100%;height:52px;pointer-events:none;z-index:3" viewBox="0 0 1440 52" preserveAspectRatio="none">
+    <path d="M0,26 Q90,8 180,26 Q270,44 360,26 Q450,8 540,26 Q630,44 720,26 Q810,8 900,26 Q990,44 1080,26 Q1170,8 1260,26 Q1350,44 1440,26" stroke="#FF80C0" stroke-width="2.5" fill="none" opacity=".6"/>
+    <circle cx="180" cy="26" r="7" fill="#FFD6EC"/><circle cx="180" cy="26" r="4" fill="#FF4FA7"/>
+    <circle cx="360" cy="26" r="7" fill="#FFD6EC"/><circle cx="360" cy="26" r="4" fill="#E91E8C"/>
+    <circle cx="540" cy="26" r="7" fill="#FFD6EC"/><circle cx="540" cy="26" r="4" fill="#FF4FA7"/>
+    <circle cx="720" cy="26" r="9" fill="#FFD6EC"/><circle cx="720" cy="26" r="5" fill="#E91E8C"/>
+    <text x="710" y="48" font-size="16" text-anchor="middle">🧸</text>
+    <line x1="720" y1="26" x2="720" y2="36" stroke="#FFB3D9" stroke-width="2"/>
+    <circle cx="900" cy="26" r="7" fill="#FFD6EC"/><circle cx="900" cy="26" r="4" fill="#FF4FA7"/>
+    <circle cx="1080" cy="26" r="7" fill="#FFD6EC"/><circle cx="1080" cy="26" r="4" fill="#E91E8C"/>
+    <circle cx="1260" cy="26" r="7" fill="#FFD6EC"/><circle cx="1260" cy="26" r="4" fill="#FF4FA7"/>
+  </svg>
+
+  <p class="sec-lbl reveal" style="margin-top:2.5rem;text-align:center">From the heart 🌸</p>
+  <h2 class="sec-ttl reveal" style="text-align:center">Reasons I Adore You</h2>
+  <p class="reveal" style="text-align:center;font-size:.85rem;opacity:.65;margin-bottom:2rem;font-style:italic">✦ Click each card for a surprise ✦</p>
+  <div class="cards-grid">
+    <div class="card reveal" onclick="cardBurst(this)" data-tip="Click me! 💗">
+      <svg class="card-rb" viewBox="0 0 54 54"><path d="M0,0 L54,0 L54,54" fill="#FF4FA7" opacity=".28"/><text x="29" y="22" font-size="18">🎀</text></svg>
+      <span class="card-icon">🌸</span><div class="card-ttl">Your Laugh</div>
+      <p class="card-txt">The most contagious, joyful sound. You light up every room just by laughing.</p>
+    </div>
+    <div class="card reveal" onclick="cardBurst(this)" data-tip="Click me! 💗">
+      <svg class="card-rb" viewBox="0 0 54 54"><path d="M0,0 L54,0 L54,54" fill="#FF80C0" opacity=".28"/><text x="29" y="22" font-size="18">🎀</text></svg>
+      <span class="card-icon">💫</span><div class="card-ttl">Your Kindness</div>
+      <p class="card-txt">You carry so much warmth for everyone. The way you care makes my heart full.</p>
+    </div>
+    <div class="card reveal" onclick="cardBurst(this)" data-tip="Click me! 💗">
+      <svg class="card-rb" viewBox="0 0 54 54"><path d="M0,0 L54,0 L54,54" fill="#FFB3D9" opacity=".28"/><text x="29" y="22" font-size="18">🎀</text></svg>
+      <span class="card-icon">🧠</span><div class="card-ttl">Your Mind</div>
+      <p class="card-txt">Brilliant, curious, endlessly wonderful to talk to. Always surprising me.</p>
+    </div>
+    <div class="card reveal" onclick="cardBurst(this)" data-tip="Click me! 💗">
+      <svg class="card-rb" viewBox="0 0 54 54"><path d="M0,0 L54,0 L54,54" fill="#FF4FA7" opacity=".28"/><text x="29" y="22" font-size="18">🎀</text></svg>
+      <span class="card-icon">🌙</span><div class="card-ttl">Your Strength</div>
+      <p class="card-txt">You face every challenge with grace. You inspire me more than you'll ever know.</p>
+    </div>
+    <div class="card reveal" onclick="cardBurst(this)" data-tip="Click me! 💗">
+      <svg class="card-rb" viewBox="0 0 54 54"><path d="M0,0 L54,0 L54,54" fill="#E91E8C" opacity=".2"/><text x="29" y="22" font-size="18">🎀</text></svg>
+      <span class="card-icon">🎀</span><div class="card-ttl">Your Quirks</div>
+      <p class="card-txt">Every little thing that makes you YOU — I wouldn't change a single detail.</p>
+    </div>
+    <div class="card reveal" onclick="cardBurst(this)" data-tip="Click me! 💗">
+      <svg class="card-rb" viewBox="0 0 54 54"><path d="M0,0 L54,0 L54,54" fill="#FF80C0" opacity=".28"/><text x="29" y="22" font-size="18">🎀</text></svg>
+      <span class="card-icon">🧸</span><div class="card-ttl">Being Loved by You</div>
+      <p class="card-txt">I feel it in the smallest moments. The luckiest day was when I found you.</p>
+    </div>
+  </div>
+  <svg class="wave" style="bottom:0" viewBox="0 0 1440 58" preserveAspectRatio="none">
+    <path d="M0,58 L0,20 Q360,58 720,34 Q1080,10 1440,44 L1440,58 Z" fill="#ffc8e0"/>
+  </svg>
+</section>
+
+<!-- ═══════════════════════════════════
+     LOVE LETTER ENVELOPE
+═══════════════════════════════════ -->
+<section id="envelope-sec">
+  <svg class="wave" style="top:0" viewBox="0 0 1440 45" preserveAspectRatio="none">
+    <path d="M0,0 Q360,45 720,22 Q1080,0 1440,36 L1440,0 Z" fill="#ffdaee"/>
+  </svg>
+  <div class="hbear" style="position:absolute;right:8%;top:12%;font-size:4.5rem;animation-duration:3s">🧸</div>
+  <div class="hbear" style="position:absolute;left:7%;bottom:14%;font-size:4rem;animation-duration:3.5s;animation-delay:.5s">🌷</div>
+
+  <p class="sec-lbl reveal" style="text-align:center">Open your letter 💌</p>
+  <h2 class="sec-ttl reveal" style="text-align:center">A Special Letter</h2>
+
+  <div class="envelope-wrap reveal" id="envWrap">
+    <div class="envelope" id="env">
+      <div class="env-body" id="envBody">
+        <div class="env-flap" id="envFlap"></div>
+        <div class="env-bottom"></div>
+        <div class="env-left"></div>
+        <div class="env-right"></div>
+        <div class="env-seal" id="envSeal">💗</div>
+      </div>
+    </div>
+    <div class="env-hint" id="envHint">✦ Click the envelope to open it ✦</div>
+  </div>
+
+  <!-- LETTER MODAL -->
+  <div id="letterModal">
+    <div class="letter-card">
+      <button class="letter-close" onclick="closeLetterModal()">✕</button>
+      <span class="letter-top-icon">💌</span>
+      <p class="letter-txt">"Hi baby!! I hope this letter finds you well, and I hope you're doing okay ^__^. Anyway, I just want you to know that I'm very, very, very proud of you, and you're doing very, very well, okay? I also want you to remember that you are so loved and deserve to be loved po!! I know I've said this many times already and it may sound repetitive, but if you are tired, don't forget to rest and eat po, okay? It'll be useless if you don't eat or rest because your brain won't function properly po, oki? <br> <br> We are just here po (especially me!) whenever you need someone to be by your side. I may not be there by your side yet, but rest assured that I will be there when the right time comes po. I will be the one to take care of you alongside Tito and Tita, heh. Don't give up po, ah! Tito and Tita didn't raise a quitter! They raised someone who is cute, pretty, kind, and so lovable! We will still do everything together, right? So don't quit po, ah! Our "anaks"will get mad at you, sige ka. Kidding aside, we are here to support and love you po!! I love you, my baby!! 🌸"</p>
+      <p class="letter-sign">— With all my love 🌷</p>
+      <div class="letter-deco">🌸 🧸 💗 🎀 ✨</div>
+      <p style="font-size:.72rem;color:#6B0F40;opacity:.45;margin-top:.9rem;font-style:italic;letter-spacing:.04em">✦ Click anywhere to close ✦</p>
+    </div>
+  </div>
+
+  <svg class="wave" style="bottom:0" viewBox="0 0 1440 55" preserveAspectRatio="none">
+    <path d="M0,55 L0,18 Q360,55 720,30 Q1080,6 1440,44 L1440,55 Z" fill="#ffc8e0"/>
+  </svg>
+</section>
+
+<!-- ═══════════════════════════════════
+     BEAR DRESS-UP
+═══════════════════════════════════ -->
+<section id="dressup">
+  <svg class="wave" style="top:0" viewBox="0 0 1440 45" preserveAspectRatio="none">
+    <path d="M0,0 Q360,45 720,22 Q1080,0 1440,36 L1440,0 Z" fill="#ffc8e0"/>
+  </svg>
+  <p class="sec-lbl reveal" style="text-align:center;margin-top:1rem">Dress up time 🧸</p>
+  <h2 class="sec-ttl reveal" style="text-align:center">Bear Dress-Up!</h2>
+  <p class="reveal" style="text-align:center;font-size:.85rem;opacity:.65;margin-bottom:2rem;font-style:italic">✦ Mix & match to create your bear look ✦</p>
+
+  <div class="dressup-stage reveal">
+    <div class="bear-display">
+      <div style="position:relative;display:inline-block">
+        <div class="bear-stage-inner" id="bearMain" onclick="bearHug()">
+          🧸
+          <div class="bear-hat" id="bearHat"></div>
+          <div class="bear-acc" id="bearAcc"></div>
+          <div class="bear-l" id="bearL"></div>
+          <div class="bear-r" id="bearR"></div>
+        </div>
+      </div>
+      <div class="bear-name" id="bearName">Your Bear</div>
+      <button onclick="bearHug()" style="margin-top:.8rem;background:var(--pl);border:2px solid var(--lt);border-radius:50px;padding:.45rem 1.3rem;font-family:'Poppins',sans-serif;font-size:.8rem;font-weight:600;color:var(--dk);cursor:none;transition:background .2s">Hug bear 🤗</button>
+    </div>
+    <div class="dress-panels">
+      <div class="dress-category">
+        <div class="dress-cat-lbl">🎩 Hats</div>
+        <div class="dress-options" id="dHats"></div>
+      </div>
+      <div class="dress-category">
+        <div class="dress-cat-lbl">💎 Accessories</div>
+        <div class="dress-options" id="dAccs"></div>
+      </div>
+      <div class="dress-category">
+        <div class="dress-cat-lbl">🌸 Left hand</div>
+        <div class="dress-options" id="dLeft"></div>
+      </div>
+      <div class="dress-category">
+        <div class="dress-cat-lbl">💫 Right hand</div>
+        <div class="dress-options" id="dRight"></div>
+      </div>
+      <div class="dress-category">
+        <div class="dress-cat-lbl">🐾 Bear type</div>
+        <div class="dress-options" id="dBear"></div>
+      </div>
+    </div>
+  </div>
+  <svg class="wave" style="bottom:0" viewBox="0 0 1440 56" preserveAspectRatio="none">
+    <path d="M0,56 L0,18 Q360,56 720,32 Q1080,8 1440,46 L1440,56 Z" fill="#ffd4e8"/>
+  </svg>
+</section>
+
+<!-- ═══════════════════════════════════
+     MUSIC BOX
+═══════════════════════════════════ -->
+<section id="musicbox">
+  <svg class="wave" style="top:0" viewBox="0 0 1440 45" preserveAspectRatio="none">
+    <path d="M0,0 Q360,45 720,22 Q1080,0 1440,36 L1440,0 Z" fill="#ffdaee"/>
+  </svg>
+  <div class="hbear" style="position:absolute;left:6%;top:16%;font-size:4rem;animation-duration:3.4s">🎵</div>
+  <div class="hbear" style="position:absolute;right:7%;bottom:16%;font-size:3.5rem;animation-duration:3s;animation-delay:.6s">🎶</div>
+
+  <p class="sec-lbl reveal" style="text-align:center;margin-top:1rem">For your ears only 🎵</p>
+  <h2 class="sec-ttl reveal" style="text-align:center">Our Song Box</h2>
+  <p class="reveal" style="text-align:center;font-size:.85rem;opacity:.65;margin-bottom:2rem;font-style:italic">✦ Press play & feel the love ✦</p>
+
+  <div class="music-player reveal" style="position:relative">
+    <div class="music-disc" id="musicDisc">
+      <img class="disc-img" src="https://images.unsplash.com/photo-1518199266791-5375a83190b7?w=300&q=80" alt="disc" id="discImg"/>
+      <div class="disc-overlay"></div>
+      <div class="disc-center"></div>
+    </div>
+    <div class="music-title" id="songTitle">Our Song</div>
+    <div class="music-sub" id="songArtist">Just for you 🌸</div>
+    <div class="music-bar" id="musicBar"></div>
+    <div class="music-controls" style="margin-top:1rem">
+      <button class="mc-btn prev" onclick="prevSong()">⏮</button>
+      <button class="mc-btn play" id="playBtn" onclick="togglePlay()">▶</button>
+      <button class="mc-btn next" onclick="nextSong()">⏭</button>
+    </div>
+  </div>
+  <svg class="wave" style="bottom:0" viewBox="0 0 1440 56" preserveAspectRatio="none">
+    <path d="M0,56 L0,16 Q360,56 720,32 Q1080,6 1440,44 L1440,56 Z" fill="#ffb4d6"/>
+  </svg>
+</section>
+
+<!-- ═══════════════════════════════════
+     LOVE METER
+═══════════════════════════════════ -->
+<section id="meter">
+  <svg class="wave" style="top:0" viewBox="0 0 1440 45" preserveAspectRatio="none">
+    <path d="M0,0 Q360,45 720,22 Q1080,0 1440,36 L1440,0 Z" fill="#ffc8e0"/>
+  </svg>
+  <div class="hbear" style="position:absolute;right:8%;top:10%;font-size:5.5rem;animation-duration:3s">🧸</div>
+  <div class="hbear" style="position:absolute;left:6%;bottom:14%;font-size:4.5rem;animation-duration:3.5s;animation-delay:.5s">🎀</div>
+  <p class="sec-lbl reveal" style="text-align:center">Scientifically proven 🧪</p>
+  <h2 class="sec-ttl reveal" style="text-align:center">Love Level</h2>
+  <div class="bears-row reveal">
+    <span>🧸</span><span>💗</span><span>🧸</span>
+  </div>
+  <div class="reveal" style="max-width:560px;margin:0 auto;text-align:center">
+    <div class="meter-track"><div class="meter-fill" id="mFill"></div></div>
+    <div class="meter-pct" id="mPct">0%</div>
+    <div class="meter-msg" id="mMsg">Press the button to measure! 🌸</div>
+    <button class="meter-btn" onclick="measureLove()">Measure My Love 💗</button>
+  </div>
+  <svg class="wave" style="bottom:0" viewBox="0 0 1440 56" preserveAspectRatio="none">
+    <path d="M0,56 L0,18 Q360,56 720,30 Q1080,6 1440,44 L1440,56 Z" fill="#ffecf6"/>
+  </svg>
+</section>
+
+<!-- ═══════════════════════════════════
+     MOOD BOARD
+═══════════════════════════════════ -->
+<section id="moodboard">
+  <svg class="wave" style="top:0" viewBox="0 0 1440 45" preserveAspectRatio="none">
+    <path d="M0,0 Q360,45 720,22 Q1080,0 1440,36 L1440,0 Z" fill="#ffecf6"/>
+  </svg>
+  <p class="sec-lbl reveal" style="text-align:center;margin-top:1rem">How are you feeling? 💭</p>
+  <h2 class="sec-ttl reveal" style="text-align:center">Tell Me Your Mood</h2>
+  <p class="reveal" style="text-align:center;font-size:.85rem;opacity:.65;margin-bottom:0;font-style:italic">✦ Click your mood and get a love message ✦</p>
+  <div class="mood-grid reveal">
+    <div class="mood-btn" onclick="setMood('happy')" data-tip="Happy 😊">
+      <span class="mood-icon">😊</span><div class="mood-label">Happy</div>
+    </div>
+    <div class="mood-btn" onclick="setMood('loved')" data-tip="Loved 💗">
+      <span class="mood-icon">🥰</span><div class="mood-label">Loved</div>
+    </div>
+    <div class="mood-btn" onclick="setMood('tired')" data-tip="Tired 😴">
+      <span class="mood-icon">😴</span><div class="mood-label">Tired</div>
+    </div>
+    <div class="mood-btn" onclick="setMood('sad')" data-tip="Sad 🌧">
+      <span class="mood-icon">🥺</span><div class="mood-label">Sad</div>
+    </div>
+    <div class="mood-btn" onclick="setMood('excited')" data-tip="Excited ✨">
+      <span class="mood-icon">🤩</span><div class="mood-label">Excited</div>
+    </div>
+    <div class="mood-btn" onclick="setMood('cozy')" data-tip="Cozy 🧸">
+      <span class="mood-icon">🧸</span><div class="mood-label">Cozy</div>
+    </div>
+    <div class="mood-btn" onclick="setMood('hungry')" data-tip="Hungry 🍰">
+      <span class="mood-icon">🍰</span><div class="mood-label">Hungry</div>
+    </div>
+    <div class="mood-btn" onclick="setMood('silly')" data-tip="Silly 🌀">
+      <span class="mood-icon">🤪</span><div class="mood-label">Silly</div>
+    </div>
+  </div>
+  <div class="mood-response" id="moodResp"></div>
+  <svg class="wave" style="bottom:0" viewBox="0 0 1440 56" preserveAspectRatio="none">
+    <path d="M0,56 L0,18 Q360,56 720,30 Q1080,6 1440,44 L1440,56 Z" fill="#ffc8e0"/>
+  </svg>
+</section>
+
+<!-- ═══════════════════════════════════
+     COUNTING SECTION
+═══════════════════════════════════ -->
+<section id="counting">
+  <svg class="wave" style="top:0" viewBox="0 0 1440 45" preserveAspectRatio="none">
+    <path d="M0,0 Q360,45 720,22 Q1080,0 1440,36 L1440,0 Z" fill="#ffdaee"/>
+  </svg>
+  <div class="hbear" style="position:absolute;right:5%;top:8%;font-size:5rem;animation-duration:3.2s">🌸</div>
+  <div class="hbear" style="position:absolute;left:5%;bottom:10%;font-size:4.5rem;animation-duration:3.6s;animation-delay:.4s">🧸</div>
+  <p class="sec-lbl reveal" style="text-align:center;margin-top:1rem">Us in numbers 🔢</p>
+  <h2 class="sec-ttl reveal" style="text-align:center">Count the Love</h2>
+  <div class="counts-grid reveal">
+    <div class="count-card" onclick="countPop(this)">
+      <span class="count-icon">🧸</span>
+      <div class="count-num" data-target="365">0</div>
+      <div class="count-lbl">Days of memories</div>
+    </div>
+    <div class="count-card" onclick="countPop(this)">
+      <span class="count-icon">💗</span>
+      <div class="count-num" data-target="∞">∞</div>
+      <div class="count-lbl">Reasons I love you</div>
+    </div>
+    <div class="count-card" onclick="countPop(this)">
+      <span class="count-icon">🌸</span>
+      <div class="count-num" data-target="1000">0</div>
+      <div class="count-lbl">Smiles you gave me</div>
+    </div>
+    <div class="count-card" onclick="countPop(this)">
+      <span class="count-icon">🎥</span>
+      <div class="count-num" data-target="247">0</div>
+      <div class="count-lbl">Movie Nights together</div>
+    </div>
+  </div>
+  <p class="reveal" style="text-align:center;font-size:.82rem;opacity:.55;margin-top:1.5rem;font-style:italic">✦ Click cards to pop them! ✦</p>
+  <svg class="wave" style="bottom:0" viewBox="0 0 1440 56" preserveAspectRatio="none">
+    <path d="M0,56 L0,16 Q360,56 720,30 Q1080,6 1440,44 L1440,56 Z" fill="#ffb4d6"/>
+  </svg>
+</section>
+
+<!-- ═══════════════════════════════════
+     QUIZ
+═══════════════════════════════════ -->
+<section id="quiz">
+  <svg class="wave" style="top:0" viewBox="0 0 1440 45" preserveAspectRatio="none">
+    <path d="M0,0 Q360,45 720,22 Q1080,0 1440,36 L1440,0 Z" fill="#ffb4d6"/>
+  </svg>
+  <div class="hbear" style="position:absolute;left:5%;top:14%;font-size:5rem;animation-duration:2.8s">🧸</div>
+  <div class="hbear" style="position:absolute;right:5%;bottom:14%;font-size:4.5rem;animation-duration:3.3s;animation-delay:.7s">🌸</div>
+  <p class="sec-lbl reveal" style="text-align:center;margin-top:1rem">Test your knowledge 💌</p>
+  <h2 class="sec-ttl reveal" style="text-align:center">Love Quiz</h2>
+  <div class="quiz-box reveal">
+    <span class="quiz-bear">🧸</span>
+    <div class="qscore" id="qScore">Score: 0 / 6</div>
+    <div class="qq" id="qQ">Loading...</div>
+    <div class="qopts" id="qOpts"></div>
+    <div class="qres" id="qRes"></div>
+    <button class="qnxt" id="qNxt" onclick="nextQ()">Next Question →</button>
+  </div>
+  <svg class="wave" style="bottom:0" viewBox="0 0 1440 56" preserveAspectRatio="none">
+    <path d="M0,56 L0,16 Q360,56 720,30 Q1080,6 1440,44 L1440,56 Z" fill="#ffd4e8"/>
+  </svg>
+</section>
+
+<!-- ═══════════════════════════════════
+     SCRATCH CARD
+═══════════════════════════════════ -->
+<section id="scratch">
+  <svg class="wave" style="top:0" viewBox="0 0 1440 45" preserveAspectRatio="none">
+    <path d="M0,0 Q360,45 720,22 Q1080,0 1440,36 L1440,0 Z" fill="#ffc8e0"/>
+  </svg>
+  <div class="hbear" style="position:absolute;right:7%;top:12%;font-size:4.5rem;animation-duration:3.1s">🧸</div>
+  <p class="sec-lbl reveal" style="text-align:center;margin-top:1rem">A hidden surprise 🎁</p>
+  <h2 class="sec-ttl reveal" style="text-align:center">Scratch to Reveal</h2>
+  <p class="reveal" style="text-align:center;font-size:.85rem;opacity:.65;margin-bottom:.5rem;font-style:italic">✦ Scratch the card to uncover your message ✦</p>
+  <div class="reveal" style="text-align:center">
+    <div class="scratch-wrap">
+      <div class="scratch-msg">
+        <span style="font-size:2.4rem">💗</span>
+        <span>You are the girl that I've been dreaming of.</span>
+        <span>I love you more than all the stars. 🌸✨</span>
+      </div>
+      <canvas id="sCanvas" width="340" height="200"></canvas>
+    </div>
+    <div class="scratch-pct" id="scratchHint">Scratch away the pink to reveal your message 🐭</div>
+    <button class="scratch-rst" onclick="resetScratch()">↺ Reseal & try again</button>
+  </div>
+  <svg class="wave" style="bottom:0" viewBox="0 0 1440 56" preserveAspectRatio="none">
+    <path d="M0,56 L0,16 Q360,56 720,30 Q1080,6 1440,44 L1440,56 Z" fill="#ffecf6"/>
+  </svg>
+</section>
+
+<!-- ═══════════════════════════════════
+     LOVE NOTE + STICKER PLAYGROUND
+═══════════════════════════════════ -->
+<section id="note">
+  <svg class="wave" style="top:0" viewBox="0 0 1440 55" preserveAspectRatio="none">
+    <path d="M0,0 Q360,55 720,28 Q1080,0 1440,42 L1440,0 Z" fill="#ffdaee"/>
+    <g transform="translate(60,16)"><ellipse rx="32" ry="13" fill="#FF4FA7" opacity=".8" transform="rotate(-24)"/><ellipse rx="32" ry="13" fill="#E91E8C" opacity=".74" transform="rotate(24)"/><circle r="10" fill="#FFD6EC"/><circle r="5" fill="#E91E8C"/></g>
+    <g transform="translate(720,25)"><ellipse rx="42" ry="16" fill="#FF80C0" opacity=".76" transform="rotate(-18)"/><ellipse rx="42" ry="16" fill="#FF4FA7" opacity=".72" transform="rotate(18)"/><circle r="13" fill="#FFD6EC"/><circle r="6" fill="#E91E8C"/></g>
+    <g transform="translate(1380,16)"><ellipse rx="32" ry="13" fill="#FF4FA7" opacity=".8" transform="rotate(-24)"/><ellipse rx="32" ry="13" fill="#E91E8C" opacity=".74" transform="rotate(24)"/><circle r="10" fill="#FFD6EC"/><circle r="5" fill="#E91E8C"/></g>
+  </svg>
+
+  <div class="hbear" style="position:absolute;left:5%;top:12%;font-size:5.5rem;animation-duration:3.4s">🧸</div>
+  <div class="hbear" style="position:absolute;right:6%;top:8%;font-size:4.5rem;animation-duration:2.9s;animation-delay:.4s">🎀</div>
+
+  <p class="sec-lbl reveal" style="text-align:center;margin-top:2rem">Just for my Louise 💌</p>
+  <h2 class="sec-ttl reveal" style="text-align:center">A Love Poem</h2>
+
+  <div class="note-card reveal" id="noteCard">
+    <div class="sticker" style="top:-14px;left:20px" id="st1">🌸</div>
+    <div class="sticker" style="top:-10px;right:24px" id="st2">✨</div>
+    <div class="sticker" style="bottom:16px;left:18px" id="st3">🧸</div>
+    <div class="sticker" style="bottom:14px;right:20px" id="st4">🎀</div>
+    <p class="note-txt">"I watch you walk through days that feel too heavy,
+carrying storms no one else can see,
+yet you still choose kindness,
+still choose to care,
+still choose to be the gentle light
+in rooms that forget how to glow.
+<br>
+<br>
+
+And I stand here quietly amazed,
+because loving you
+has shown me what strength truly looks like—
+not loud, not boastful,
+but patient, steady,
+soft in a world that often forgets how to be soft.
+<br>
+<br>
+
+I am proud of you
+for every small step you take forward,
+for every battle you fight in silence,
+for every time you rise again
+when the world tries to convince you to stay down.
+<br>
+<br>
+
+Please remember this:
+you are not difficult to love,
+you are not too much,
+you are not a burden disguised as a heart.
+<br>
+<br>
+
+You are someone
+who deserves warmth in cold seasons,
+gentle words after long days,
+hands that hold you without hesitation,
+and a love that never makes you question
+whether you belong.
+<br>
+<br>
+
+Because you do.
+<br>
+<br>
+
+You are loved in the quiet spaces,
+loved in the loud moments,
+loved when you are strong,
+and loved when you feel like breaking.
+<br>
+<br>
+
+And if the world ever forgets
+how deserving you are of that love,
+I will be here—
+reminding you,
+again and again,
+that someone sees you,
+someone believes in you,
+and someone is endlessly proud
+to call you theirs."</p>
+    <p class="note-sign">— Forever yours 🌷</p>
+  </div>
+
+  <!-- Sticker tray -->
+  <p class="reveal" style="text-align:center;font-size:.8rem;opacity:.55;margin-top:1.4rem;font-style:italic">✦ Drag the stickers on the card · Click below to add more ✦</p>
+  <div class="sticker-tray reveal" id="stickerTray">
+    <span class="stray-item" onclick="addSticker(this)" data-emoji="🌸">🌸</span>
+    <span class="stray-item" onclick="addSticker(this)" data-emoji="🧸">🧸</span>
+    <span class="stray-item" onclick="addSticker(this)" data-emoji="🎀">🎀</span>
+    <span class="stray-item" onclick="addSticker(this)" data-emoji="💗">💗</span>
+    <span class="stray-item" onclick="addSticker(this)" data-emoji="✨">✨</span>
+    <span class="stray-item" onclick="addSticker(this)" data-emoji="🌷">🌷</span>
+    <span class="stray-item" onclick="addSticker(this)" data-emoji="🍓">🍓</span>
+    <span class="stray-item" onclick="addSticker(this)" data-emoji="🌺">🌺</span>
+    <span class="stray-item" onclick="addSticker(this)" data-emoji="💕">💕</span>
+    <span class="stray-item" onclick="addSticker(this)" data-emoji="🍰">🍰</span>
+    <span class="stray-item" onclick="addSticker(this)" data-emoji="🌈">🌈</span>
+    <span class="stray-item" onclick="addSticker(this)" data-emoji="🦋">🦋</span>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <svg style="position:absolute;top:0;left:0;width:100%;pointer-events:none" viewBox="0 0 1440 42" preserveAspectRatio="none">
+    <path d="M0,42 Q360,0 720,22 Q1080,42 1440,12 L1440,42 Z" fill="#C2185B" opacity=".25"/>
+  </svg>
+  <div class="ftxt">
+    <div class="footer-bears">🧸 💗 🌸 🎀 ✨ 🌷 🍰 💕</div>
+    Made with <span>Love</span> just for my Louise | You deserve the whole world 🌸<br>
+  </div>
+</footer>
+
+<script>
+/* ════════════════════════════════════════
+   CURSOR + TRAIL
+════════════════════════════════════════ */
+const cursor = document.getElementById('cursor');
+const trail = document.getElementById('cursor-trail');
+let mx=0,my=0;
+document.addEventListener('mousemove', e => {
+  mx=e.clientX; my=e.clientY;
+  cursor.style.left=mx+'px'; cursor.style.top=my+'px';
+  const d=document.createElement('div');
+  d.className='trail-dot';
+  d.style.cssText=`left:${mx}px;top:${my}px;width:8px;height:8px;background:${Math.random()>.5?'#FF80C0':'#FFB3D9'};animation-duration:.5s`;
+  trail.appendChild(d);
+  setTimeout(()=>d.remove(),520);
+});
+document.addEventListener('mousedown',()=>cursor.classList.add('click'));
+document.addEventListener('mouseup',()=>cursor.classList.remove('click'));
+
+/* ════════════════════════════════════════
+   TOOLTIP
+════════════════════════════════════════ */
+const tip=document.getElementById('tip');
+document.querySelectorAll('[data-tip]').forEach(el=>{
+  el.addEventListener('mouseenter',()=>{tip.textContent=el.dataset.tip;tip.classList.add('on')});
+  el.addEventListener('mouseleave',()=>tip.classList.remove('on'));
+  el.addEventListener('mousemove',e=>{tip.style.left=(e.clientX+18)+'px';tip.style.top=(e.clientY-12)+'px'});
+});
+
+/* ════════════════════════════════════════
+   BG FLOATERS
+════════════════════════════════════════ */
+const bgf=document.getElementById('bgf');
+const HC=['🌸','💗','🧸','🎀','💕','✨','🩷','💓','🌷','🍓'];
+for(let i=0;i<22;i++){
+  const h=document.createElement('span');
+  h.textContent=HC[Math.floor(Math.random()*HC.length)];
+  h.style.cssText=`position:absolute;bottom:-50px;left:${Math.random()*100}vw;font-size:${.9+Math.random()*1.6}rem;animation:bgfl ${10+Math.random()*16}s ${Math.random()*14}s linear infinite;`;
+  bgf.appendChild(h);
+}
+
+/* ════════════════════════════════════════
+   CLICK HEARTS
+════════════════════════════════════════ */
+document.addEventListener('click', e => {
+  for(let i=0;i<8;i++){
+    const h=document.createElement('div');h.className='fly-h';
+    h.textContent=HC[Math.floor(Math.random()*HC.length)];
+    h.style.left=e.clientX+'px';h.style.top=e.clientY+'px';
+    const a=(Math.random()*280-140)*Math.PI/180, d=60+Math.random()*95;
+    h.style.setProperty('--tx',Math.cos(a)*d+'px');
+    h.style.setProperty('--ty',Math.sin(a)*d-60+'px');
+    h.style.animationDelay=(i*.06)+'s';
+    h.style.fontSize=(.9+Math.random()*.9)+'rem';
+    document.body.appendChild(h);setTimeout(()=>h.remove(),1000);
+  }
+});
+
+/* ════════════════════════════════════════
+   SCROLL REVEAL
+════════════════════════════════════════ */
+const revObs=new IntersectionObserver(entries=>{
+  entries.forEach((e,i)=>{if(e.isIntersecting){setTimeout(()=>e.target.classList.add('vis'),i*85);revObs.unobserve(e.target)}});
+},{threshold:.1});
+document.querySelectorAll('.reveal').forEach(r=>revObs.observe(r));
+
+/* ════════════════════════════════════════
+   CONFETTI
+════════════════════════════════════════ */
+const cw=document.getElementById('cw');
+const CC=['#FF4FA7','#E91E8C','#FFB3D9','#FF80C0','#C2185B','#FFD6EC','#7B1245','#FF9ECB'];
+function launchConfetti(n=100){
+  for(let i=0;i<n;i++){
+    const c=document.createElement('div');
+    const sz=5+Math.random()*11;
+    c.style.cssText=`position:absolute;left:${Math.random()*100}%;top:-20px;width:${sz}px;height:${sz}px;background:${CC[Math.floor(Math.random()*CC.length)]};border-radius:${Math.random()>.5?'50%':'3px'};animation:cfall ${1.4+Math.random()*2.4}s ${Math.random()*.9}s ease-in forwards;`;
+    cw.appendChild(c);setTimeout(()=>c.remove(),4000);
+  }
+}
+
+/* ════════════════════════════════════════
+   CARD BURST
+════════════════════════════════════════ */
+function cardBurst(card){
+  const r=card.getBoundingClientRect(),cx=r.left+r.width/2,cy=r.top+r.height/2;
+  for(let i=0;i<14;i++){
+    const h=document.createElement('div');h.className='fly-h';
+    h.textContent=HC[Math.floor(Math.random()*HC.length)];
+    h.style.left=cx+'px';h.style.top=cy+'px';
+    const a=(i/14)*Math.PI*2, d=55+Math.random()*70;
+    h.style.setProperty('--tx',Math.cos(a)*d+'px');
+    h.style.setProperty('--ty',Math.sin(a)*d-40+'px');
+    h.style.animationDelay=(i*.04)+'s';
+    document.body.appendChild(h);setTimeout(()=>h.remove(),1000);
+  }
+  const flash=document.createElement('div');flash.className='card-clicked';card.appendChild(flash);
+  setTimeout(()=>flash.remove(),450);
+  card.style.transform='translateY(-12px) scale(1.06) rotate(-2.5deg)';
+  setTimeout(()=>card.style.transform='',380);
+}
+
+/* ════════════════════════════════════════
+   ENVELOPE → MODAL LETTER
+════════════════════════════════════════ */
+let envOpen=false;
+document.getElementById('envBody').addEventListener('click',()=>{
+  if(envOpen)return;
+  envOpen=true;
+  document.getElementById('envFlap').classList.add('open');
+  document.getElementById('envSeal').classList.add('hide');
+  document.getElementById('envHint').textContent='💌 Opening with love…';
+  setTimeout(()=>{
+    document.getElementById('letterModal').classList.add('open');
+    document.getElementById('envHint').textContent='✦ Click the envelope again to reseal ✦';
+    launchConfetti(80);
+  },750);
+});
+function closeLetterModal(){
+  document.getElementById('letterModal').classList.remove('open');
+  envOpen=false;
+  document.getElementById('envFlap').classList.remove('open');
+  document.getElementById('envSeal').classList.remove('hide');
+  document.getElementById('envHint').textContent='✦ Click the envelope to open it ✦';
+}
+/* Click anywhere on modal (backdrop or card) to close */
+document.getElementById('letterModal').addEventListener('click', function(){
+  closeLetterModal();
+});
+
+/* ════════════════════════════════════════
+   LOVE METER
+════════════════════════════════════════ */
+const mFill=document.getElementById('mFill'),mPct=document.getElementById('mPct'),mMsg=document.getElementById('mMsg');
+const mData=[
+  {p:72,m:'72% — Already so much love! 💗'},
+  {p:91,m:'91% — Completely off the charts! 🌸'},
+  {p:100,m:'∞% — The meter exploded! 💥💖'}
+];
+let mStep=0;
+function measureLove(){
+  if(mStep>=mData.length)mStep=0;
+  const{p,m}=mData[mStep];
+  mFill.style.width=p+'%';mPct.textContent=p+(p===100?'%':'%');mMsg.textContent=m;
+  if(mStep===2){launchConfetti();playMusicNotes()}
+  mStep++;
+}
+function playMusicNotes(){
+  const ns=['🎵','🎶','♪','♫'];
+  for(let i=0;i<16;i++)setTimeout(()=>{
+    const n=document.createElement('div');
+    n.style.cssText=`position:fixed;pointer-events:none;z-index:99960;font-size:${1.2+Math.random()*.8}rem;left:${Math.random()*90}vw;top:${60+Math.random()*20}vh;animation:cfall 2s ease-out forwards;`;
+    n.textContent=ns[Math.floor(Math.random()*ns.length)];
+    document.body.appendChild(n);setTimeout(()=>n.remove(),2100);
+  },i*100);
+}
+
+/* ════════════════════════════════════════
+   BEAR DRESS-UP
+════════════════════════════════════════ */
+const dressData={
+  bears:['🧸','🐻','🐨','🐼','🦊','🐱','🐰'],
+  hats:['🎀','👑','🎓','🎩','💐','🌸','🌺','⭐','🍓'],
+  accs:['💗','✨','🎀','🌷','💫','🌸','🍰','🎵'],
+  left:['🌸','🎁','🍰','💐','📱','🌺','🎀','💌'],
+  right:['✨','💗','🍓','🌷','🎶','🌟','🎀','💕']
+};
+let bearState={bear:'🧸',hat:'',acc:'',left:'',right:''};
+const bearNames=['Your Bear','Honey Bear','Love Bear','Pink Bear','Sweet Bear','Angel Bear'];
+let bearNameIdx=0;
+
+function initDressUp(){
+  const containers={dHats:'hats',dAccs:'accs',dLeft:'left',dRight:'right',dBear:'bears'};
+  const keys={dHats:'hat',dAccs:'acc',dLeft:'left',dRight:'right',dBear:'bear'};
+  Object.entries(containers).forEach(([id,cat])=>{
+    const el=document.getElementById(id);
+    const items=(cat==='bears')?dressData.bears:dressData[cat];
+    el.innerHTML='';
+    items.forEach(em=>{
+      const b=document.createElement('div');b.className='dress-opt';b.textContent=em;
+      b.onclick=()=>{
+        const key=keys[id];
+        bearState[key]=bearState[key]===em?'':em;
+        el.querySelectorAll('.dress-opt').forEach(x=>x.classList.remove('active'));
+        if(bearState[key])b.classList.add('active');
+        updateBear();
+        cardBurst(b);
+      };
+      el.appendChild(b);
+    });
+  });
+  updateBear();
+}
+function updateBear(){
+  document.getElementById('bearMain').childNodes[0].nodeValue=bearState.bear;
+  document.getElementById('bearHat').textContent=bearState.hat;
+  document.getElementById('bearAcc').textContent=bearState.acc;
+  document.getElementById('bearL').textContent=bearState.left;
+  document.getElementById('bearR').textContent=bearState.right;
+}
+function bearHug(){
+  const bm=document.getElementById('bearMain');
+  bm.style.transform='scale(1.25) rotate(-8deg)';
+  bearNameIdx=(bearNameIdx+1)%bearNames.length;
+  document.getElementById('bearName').textContent=bearNames[bearNameIdx];
+  setTimeout(()=>bm.style.transform='',350);
+  launchConfetti(40);
+}
+initDressUp();
+
+/* ════════════════════════════════════════
+   MUSIC BOX (fake player)
+════════════════════════════════════════ */
+const songs=[
+  {title:'Perfect',artist:'Ed Sheeran — just for you 🌸',img:'https://images.unsplash.com/photo-1518199266791-5375a83190b7?w=300&q=80'},
+  {title:'A Thousand Years',artist:'Christina Perri — our song 💗',img:'https://images.unsplash.com/photo-1519671482749-fd09be7ccebf?w=300&q=80'},
+  {title:'Can\'t Help Falling',artist:'Elvis Presley — timeless 🌷',img:'https://images.unsplash.com/photo-1465577512280-1c2d41a79de3?w=300&q=80'},
+  {title:'All of Me',artist:'John Legend — for you ✨',img:'https://images.unsplash.com/photo-1490750967868-88df5691cc11?w=300&q=80'},
+  {title:'Lover',artist:'Taylor Swift — us 💕',img:'https://images.unsplash.com/photo-1474552226712-ac0f0961a954?w=300&q=80'},
+];
+let songIdx=0, playing=false;
+
+const musicBar=document.getElementById('musicBar');
+for(let i=0;i<24;i++){
+  const b=document.createElement('div');b.className='bar';
+  b.style.height='6px';b.style.setProperty('--d',(0.4+Math.random()*.6)+'s');
+  b.style.setProperty('--h',(12+Math.random()*26)+'px');
+  musicBar.appendChild(b);
+}
+
+function renderSong(){
+  const s=songs[songIdx];
+  document.getElementById('songTitle').textContent=s.title;
+  document.getElementById('songArtist').textContent=s.artist;
+  document.getElementById('discImg').src=s.img;
+}
+function togglePlay(){
+  playing=!playing;
+  document.getElementById('playBtn').textContent=playing?'⏸':'▶';
+  document.getElementById('musicDisc').className='music-disc'+(playing?' playing':'');
+  musicBar.querySelectorAll('.bar').forEach(b=>b.classList.toggle('active',playing));
+  if(playing){spawnNotes();cursor.classList.add('bigmode');}
+  else{cursor.classList.remove('bigmode');}
+}
+function spawnNotes(){
+  if(!playing)return;
+  const r=document.getElementById('musicDisc').getBoundingClientRect();
+  const n=document.createElement('div');n.className='music-note-burst';
+  n.textContent=['🎵','🎶','♪','♫'][Math.floor(Math.random()*4)];
+  const nx=(Math.random()*120-60)+'px', ny=(-40-Math.random()*60)+'px';
+  n.style.cssText=`left:${r.left+r.width/2}px;top:${r.top+r.height/2}px;--nx:${nx};--ny:${ny};`;
+  document.body.appendChild(n);setTimeout(()=>n.remove(),1250);
+  if(playing)setTimeout(spawnNotes,600+Math.random()*800);
+}
+function prevSong(){songIdx=(songIdx-1+songs.length)%songs.length;renderSong();if(playing){playing=false;togglePlay();setTimeout(togglePlay,100)}}
+function nextSong(){songIdx=(songIdx+1)%songs.length;renderSong();if(playing){playing=false;togglePlay();setTimeout(togglePlay,100)}}
+renderSong();
+
+/* ════════════════════════════════════════
+   MOOD BOARD
+════════════════════════════════════════ */
+const moodMessages={
+  happy:"You being happy makes my whole world brighter! Keep that beautiful smile going — I fall in love with it every single day. 🌸💗",
+  loved:"You ARE loved — infinitely, completely, and every second. I hope you feel it deep in your heart today and always. 🧸✨",
+  tired:"You work so hard and you deserve all the rest. Come here, let me wrap you in the biggest hug. You don't have to do everything alone. 💗🌙",
+  sad:"I wish I could take every sad feeling away. You are not alone — I'm right here, always. Things will get brighter, I promise. 🌷💌",
+  excited:"YOUR excitement is the most contagious thing in the world and I love it so much!! Let's celebrate together! 🎀✨🎉",
+  cozy:"Cozy mode activated 🧸 I just want to be wrapped up next to you with blankets and your favourite snacks. You're my favourite cozy place. 💕☕",
+  hungry:"You deserve the most delicious meal in the world right now! 🍰 What are we eating today? I'll spoil you completely. 🍓💗",
+  silly:"I LOVE your silly side so much!!! You make me laugh like no one else can. Never stop being wonderfully, perfectly you. 🤪🌸🎀"
+};
+const moodResp=document.getElementById('moodResp');
+function setMood(mood){
+  moodResp.classList.remove('show');
+  setTimeout(()=>{
+    moodResp.textContent=moodMessages[mood];
+    moodResp.classList.add('show');
+    launchConfetti(50);
+  },200);
+}
+
+/* ════════════════════════════════════════
+   COUNT CARDS ANIMATION
+════════════════════════════════════════ */
+function countPop(card){
+  const num=card.querySelector('.count-num');
+  const target=num.dataset.target;
+  if(target==='∞'){
+    card.style.transform='translateY(-10px) scale(1.08)';
+    setTimeout(()=>card.style.transform='',380);
+    launchConfetti(50);return;
+  }
+  const end=parseInt(target);
+  let current=0;const step=Math.ceil(end/40);
+  const iv=setInterval(()=>{
+    current=Math.min(current+step,end);
+    num.textContent=current;
+    if(current>=end){clearInterval(iv);launchConfetti(40)}
+  },30);
+  card.style.transform='translateY(-10px) scale(1.08)';
+  setTimeout(()=>card.style.transform='',380);
+}
+document.querySelectorAll('.count-num').forEach(n=>{
+  const t=n.dataset.target;
+  if(t&&t!=='∞'){
+    const obs2=new IntersectionObserver(entries=>{
+      if(entries[0].isIntersecting){
+        const end=parseInt(t);let c=0;const s=Math.ceil(end/50);
+        const iv=setInterval(()=>{c=Math.min(c+s,end);n.textContent=c;if(c>=end)clearInterval(iv)},28);
+        obs2.unobserve(n);
+      }
+    },{threshold:.5});
+    obs2.observe(n);
+  }
+});
+
+/* ════════════════════════════════════════
+   QUIZ
+════════════════════════════════════════ */
+const quizData=[
+  {q:"What's the best ingredient in a relationship? 🌸",opts:["Laughter every day","Endless patience","Choosing each other","All of the above!"],ans:4},
+  {q:"The perfect date night is... ✨",opts:["Fancy restaurant","Movie night at home","Stargazing together","Wherever we are together 💗"],ans:4},
+  {q:"What makes YOU beautiful? 💕",opts:["Your kind heart <3","Your wonderful laugh <3","Your kind soul <3","Everything about you <3"],ans:4},
+  {q:"How much are you loved right now? 🧸",opts:["A little bit","Quite a lot","Very very much","Infinitely & beyond 💗"],ans:4},
+  {q:"The best sound in the world is... 🎵",opts:["Music playing","Rain on windows","Birds singing","Your laugh 🌸"],ans:4},
+  {q:"What's the most magical thing? 💫",opts:["The night sky","The ocean at sunset","A warm hug","Finding the right person (you <3)"],ans:4},
+];
+let qi=0,qsc=0,qans=false;
+function renderQ(){
+  const q=quizData[qi];
+  document.getElementById('qQ').textContent=q.q;
+  const opts=document.getElementById('qOpts');opts.innerHTML='';
+  q.opts.forEach((o,i)=>{
+    const b=document.createElement('button');b.className='qopt';
+    b.innerHTML=`<span>${o}</span>`;
+    b.onclick=()=>answerQ(i,q.ans,b);
+    opts.appendChild(b);
+  });
+  document.getElementById('qRes').textContent='';
+  document.getElementById('qNxt').style.display='none';
+  qans=false;
+}
+function answerQ(chosen,correct,btn){
+  if(qans)return;qans=true;
+  document.querySelectorAll('.qopt').forEach((o,i)=>{
+    o.style.pointerEvents='none';
+    if(i===correct)o.classList.add('correct');
+  });
+  if(chosen===correct){
+    qsc++;document.getElementById('qRes').textContent='🌸 That\'s exactly right!';
+    btn.classList.add('correct');launchConfetti();
+  } else {
+    btn.classList.add('wrong');
+    document.getElementById('qRes').textContent='💗 The most loving answer is always right!';
+  }
+  document.getElementById('qScore').textContent=`Score: ${qsc} / ${quizData.length}`;
+  document.getElementById('qNxt').style.display='inline-block';
+}
+function nextQ(){
+  qi++;
+  if(qi>=quizData.length){
+    document.getElementById('qQ').textContent=`You scored ${qsc}/${quizData.length}! 🎀 You're absolutely perfect!`;
+    document.getElementById('qOpts').innerHTML='';
+    document.getElementById('qRes').textContent='💗 Every answer was beautiful because YOU are beautiful!';
+    document.getElementById('qNxt').style.display='none';
+    launchConfetti();return;
+  }
+  renderQ();
+}
+renderQ();
+
+/* ════════════════════════════════════════
+   SCRATCH CARD
+════════════════════════════════════════ */
+const canvas=document.getElementById('sCanvas'),ctx=canvas.getContext('2d');
+let sc_scratching=false;
+function initScratch(){
+  ctx.globalCompositeOperation='source-over';
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  const g=ctx.createLinearGradient(0,0,canvas.width,canvas.height);
+  g.addColorStop(0,'#FFB3D9');g.addColorStop(.5,'#FF80C0');g.addColorStop(1,'#FF4FA7');
+  ctx.fillStyle=g;ctx.fillRect(0,0,canvas.width,canvas.height);
+  ctx.font='18px serif';
+  for(let x=6;x<canvas.width;x+=32)for(let y=6;y<canvas.height;y+=30)ctx.fillText('🩷',x,y+16);
+  ctx.fillStyle='rgba(107,15,64,.7)';ctx.textAlign='center';
+  ctx.font='bold 16px Poppins,sans-serif';
+  ctx.fillText('✦ Scratch here! ✦',canvas.width/2,canvas.height/2+6);
+  document.getElementById('scratchHint').textContent='Scratch the card with your mouse 🐭';
+}
+initScratch();
+function doScratch(x,y){
+  ctx.globalCompositeOperation='destination-out';
+  ctx.beginPath();ctx.arc(x,y,26,0,Math.PI*2);ctx.fill();
+  const d=ctx.getImageData(0,0,canvas.width,canvas.height).data;
+  let c=0;for(let i=3;i<d.length;i+=4)if(d[i]===0)c++;
+  const pct=Math.round(c/(canvas.width*canvas.height)*100);
+  document.getElementById('scratchHint').textContent=`${pct}% revealed ✨`;
+  if(pct>45){ctx.clearRect(0,0,canvas.width,canvas.height);launchConfetti();document.getElementById('scratchHint').textContent='💗 You found your message!'}
+}
+canvas.addEventListener('mousedown',e=>{sc_scratching=true;const r=canvas.getBoundingClientRect();doScratch(e.clientX-r.left,e.clientY-r.top)});
+canvas.addEventListener('mousemove',e=>{if(!sc_scratching)return;const r=canvas.getBoundingClientRect();doScratch(e.clientX-r.left,e.clientY-r.top)});
+canvas.addEventListener('mouseup',()=>sc_scratching=false);
+canvas.addEventListener('mouseleave',()=>sc_scratching=false);
+canvas.addEventListener('touchstart',e=>{e.preventDefault();sc_scratching=true;const r=canvas.getBoundingClientRect(),t=e.touches[0];doScratch(t.clientX-r.left,t.clientY-r.top)},{passive:false});
+canvas.addEventListener('touchmove',e=>{e.preventDefault();if(!sc_scratching)return;const r=canvas.getBoundingClientRect(),t=e.touches[0];doScratch(t.clientX-r.left,t.clientY-r.top)},{passive:false});
+canvas.addEventListener('touchend',()=>sc_scratching=false);
+function resetScratch(){initScratch()}
+
+/* ════════════════════════════════════════
+   DRAGGABLE STICKERS
+════════════════════════════════════════ */
+function makeDraggable(el){
+  let drag=false,ox=0,oy=0;
+  el.addEventListener('mousedown',e=>{
+    drag=true;el.classList.add('dragging');
+    const r=el.getBoundingClientRect();ox=e.clientX-r.left;oy=e.clientY-r.top;
+    el.style.position='absolute';e.stopPropagation();
+  });
+  document.addEventListener('mousemove',e=>{
+    if(!drag)return;
+    const pr=el.parentElement.getBoundingClientRect();
+    el.style.left=(e.clientX-pr.left-ox)+'px';el.style.top=(e.clientY-pr.top-oy)+'px';
+    el.style.right='auto';el.style.bottom='auto';
+  });
+  document.addEventListener('mouseup',()=>{if(drag){drag=false;el.classList.remove('dragging')}});
+}
+document.querySelectorAll('.sticker').forEach(makeDraggable);
+
+function addSticker(trayItem){
+  const em=trayItem.dataset.emoji;
+  const s=document.createElement('div');
+  s.className='sticker';
+  s.textContent=em;
+  const nc=document.getElementById('noteCard');
+  s.style.top=(20+Math.random()*60)+'%';
+  s.style.left=(10+Math.random()*70)+'%';
+  s.style.fontSize=(1.8+Math.random()*.8)+'rem';
+  nc.appendChild(s);
+  makeDraggable(s);
+  s.style.animation='none';
+  s.style.transform='scale(1.4)';
+  setTimeout(()=>s.style.transform='',200);
+}
+
+/* ════════════════════════════════════════
+   HERO BUTTON EASTER EGG
+════════════════════════════════════════ */
+let heroClicks=0;
+document.getElementById('heroBtn').addEventListener('click',e=>{
+  e.preventDefault();heroClicks++;
+  if(heroClicks===3){launchConfetti(150);heroClicks=0}
+  document.querySelector('#hero').scrollIntoView({behavior:'smooth'});
+  setTimeout(()=>document.querySelector('#reasons').scrollIntoView({behavior:'smooth'}),100);
+});
+document.getElementById('heroBtn').href='#reasons';
+</script>
+</body>
+</html>

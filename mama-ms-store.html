@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Mama M's Store</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@600;700&family=Courier+Prime:wght@400;700&family=Nunito:wght@400;700;800&display=swap" rel="stylesheet">
+  <style>
+:root {
+  --green: #9ccd9b; --yellow: #ffffc4; --pink: #ffdbe8; --cream: #fffff0;
+  --brown: #3a2222; --brown-soft: #5a3a3a; --err: #b3261e; --ok: #1d7a46;
+}
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+
+body {
+  margin: 0; min-height: 100vh;
+  font-family: "Nunito", system-ui, sans-serif; color: var(--brown);
+  background-color: var(--pink);
+  background-image: radial-gradient(circle, #fff 0 14px, transparent 15px), radial-gradient(circle, #fff 0 14px, transparent 15px);
+  background-size: 150px 150px; background-position: 0 0, 75px 75px;
+}
+
+header { background: var(--green); border-bottom: 22px solid var(--yellow); text-align: center; padding: 1rem; }
+h1 { margin: 0; font: 700 clamp(2.4rem, 7vw, 5rem)/1.15 "Fredoka", sans-serif; }
+
+.layout {
+  max-width: 1120px; margin: 0 auto; padding: 3rem 1.25rem 4rem;
+  display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: 3rem; align-items: start;
+}
+
+.card { background: var(--cream); border-radius: 28px; padding: 2rem; box-shadow: 0 6px 0 rgba(58,34,34,.12); }
+.card h2 { margin: 0 0 .3rem; font: 700 1.8rem "Fredoka", sans-serif; }
+.help { margin: 0 0 1.2rem; line-height: 1.5; color: var(--brown-soft); }
+
+.fields { display: grid; grid-template-columns: 1fr 8rem; gap: 1rem; }
+.fields[data-stage="payment"] { grid-template-columns: 1fr; }
+.wide { grid-column: 1 / -1; }
+label { display: block; font-weight: 800; margin-bottom: .35rem; }
+.opt { font-weight: 400; color: var(--brown-soft); }
+
+.field { display: flex; align-items: center; background: #fff; border: 2px solid #d8c8b4; border-radius: 14px; }
+.field:focus-within { border-color: var(--brown); outline: 3px solid #f6d86b; }
+.peso { padding-left: .9rem; font-size: 1.4rem; font-weight: 800; }
+input { flex: 1; min-width: 0; border: 0; background: transparent; color: var(--brown); font: 700 1.3rem "Nunito", sans-serif; padding: .65rem .9rem; }
+.peso + input { padding-left: .5rem; }
+input:focus { outline: none; }
+
+.message { min-height: 1.5rem; margin: .7rem 0; font-weight: 700; }
+.message.error { color: var(--err); }
+.message.info { color: var(--ok); }
+
+button { font: 800 1.05rem "Nunito", sans-serif; border-radius: 14px; padding: .85rem 1.2rem; cursor: pointer; border: 2px solid var(--brown); }
+button:focus-visible { outline: 3px solid #f6d86b; outline-offset: 2px; }
+.primary { background: var(--brown); color: var(--cream); width: 100%; }
+.primary:hover { background: var(--brown-soft); }
+.ghost { background: transparent; color: var(--brown); }
+.ghost:hover { background: #f4e9d6; }
+
+.quick { display: flex; flex-wrap: wrap; gap: .6rem; margin-top: 1rem; }
+.quick button { background: #fff3a8; padding: .55rem 1rem; }
+.quick button:hover { background: #ffe978; }
+
+.result { text-align: center; background: #e5f4e3; border-radius: 18px; padding: 1.2rem; }
+.result span { display: block; font-weight: 800; }
+.result strong { font: 700 3rem "Fredoka", sans-serif; color: var(--ok); }
+
+.actions { display: grid; gap: .7rem; margin-top: 1rem; }
+.today { margin: 1.4rem 0 0; font-size: .9rem; color: var(--brown-soft); text-align: center; }
+
+/* Receipt */
+.paper {
+  font-family: "Courier Prime", "Courier New", monospace; color: #1b1b1b;
+  padding: 1.6rem 1.3rem 1.4rem; border-radius: 2px;
+  background:
+    linear-gradient(115deg, transparent 38%, rgba(255,255,255,.65) 44%, transparent 50%),
+    linear-gradient(62deg, transparent 52%, rgba(0,0,0,.06) 58%, transparent 66%),
+    linear-gradient(172deg, rgba(0,0,0,.05), transparent 30%, rgba(255,255,255,.5) 55%, rgba(0,0,0,.06)),
+    #e9e9e9;
+  box-shadow: 0 4px 10px rgba(58,34,34,.2);
+}
+.paper h3 { margin: 0 0 .2rem; text-align: center; font-size: 1.2rem; }
+.sub { margin: 0 0 1rem; text-align: center; letter-spacing: .25em; font-size: .85rem; }
+.items { list-style: none; margin: 0; padding: 0; }
+.line { display: flex; align-items: baseline; gap: .3rem; padding: .12rem 0; font-size: .92rem; }
+.line span { overflow-wrap: anywhere; }
+.line b { font-weight: 400; white-space: nowrap; }
+.dots { flex: 1; min-width: 1rem; border-bottom: 2px dotted #555; transform: translateY(-3px); }
+.rm { width: auto; padding: 0 .4rem; border: 0; background: none; color: var(--err); font-size: 1.1rem; line-height: 1; border-radius: 4px; }
+.empty { text-align: center; color: #666; }
+.totals { margin-top: .6rem; border-top: 2px dashed #555; padding-top: .5rem; }
+.totals .grand b, .totals .change b, .totals .balance b { font-weight: 700; }
+.totals .grand { font-size: 1.05rem; font-weight: 700; }
+.totals .change { color: var(--ok); }
+.totals .balance { color: var(--err); }
+.thanks { text-align: center; margin: 1rem 0 .6rem; }
+
+@media (max-width: 880px) { .layout { grid-template-columns: 1fr; gap: 2rem; } .card { padding: 1.4rem; } }
+
+  </style>
+</head>
+<body>
+  <header><h1>Mama M’s Store</h1></header>
+
+  <main class="layout">
+    <section class="card" aria-labelledby="step-title">
+      <h2 id="step-title">Item price</h2>
+      <p id="step-help" class="help"></p>
+
+      <form id="entry-form" novalidate>
+        <div class="fields" id="fields">
+          <div id="name-wrap" class="wide">
+            <label for="name">Product name <span class="opt">(optional)</span></label>
+            <div class="field"><input id="name" type="text" maxlength="30" autocomplete="off" placeholder="e.g. Instant noodles"></div>
+          </div>
+          <div>
+            <label for="amount" id="amount-label">Price per piece (₱)</label>
+            <div class="field"><span class="peso" aria-hidden="true">₱</span>
+              <input id="amount" type="number" inputmode="decimal" min="0" step="0.01" autocomplete="off" autofocus></div>
+          </div>
+          <div id="qty-wrap">
+            <label for="qty">How many?</label>
+            <div class="field"><input id="qty" type="number" inputmode="numeric" min="1" step="1" value="1" autocomplete="off"></div>
+          </div>
+        </div>
+        <p id="message" class="message" role="status" aria-live="polite"></p>
+        <button id="submit-btn" class="primary" type="submit">Add item</button>
+      </form>
+
+      <div id="quick" class="quick" hidden aria-label="Quick payment amounts"></div>
+
+      <div id="result" class="result" hidden>
+        <span>Change to give</span><strong id="result-amount"></strong>
+      </div>
+
+      <div class="actions">
+        <button id="new-btn" class="primary" type="button" hidden>Next customer</button>
+        <button id="cancel-btn" class="ghost" type="button" hidden>Cancel sale</button>
+      </div>
+
+      <p id="today" class="today"></p>
+    </section>
+
+    <aside class="receipt" aria-label="Receipt">
+      <div class="paper">
+        <h3>Mama M’s Store</h3>
+        <p class="sub">RECEIPT</p>
+        <ul id="item-list" class="items"></ul>
+        <p id="empty" class="empty">No items yet.</p>
+        <div id="totals" class="totals"></div>
+        <p id="thanks" class="thanks" hidden>Thank you for shopping with us!</p>
+      </div>
+    </aside>
+  </main>
+
+  <script>
+// Mama M's Store – sari-sari checkout
+// Money is kept in centavos (integers) to avoid floating-point errors.
+
+const DISCOUNT_THRESHOLD = 20000; // ₱200.00
+const DISCOUNT_RATE = 0.05;       // 5%
+const STORE_KEY = "mamaM-store";
+
+const $ = id => document.getElementById(id);
+const esc = s => s.replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const peso = c => "₱" + (c / 100).toLocaleString("en-PH", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+const toCentavos = v => Math.round(parseFloat(v) * 100);
+
+// ---- Daily tally (kept in the browser, resets each day) ----
+function loadDaily() {
+  const day = new Date().toDateString();
+  try {
+    const d = JSON.parse(localStorage.getItem(STORE_KEY));
+    if (d) return d.day === day ? d : { day, sales: 0, revenue: 0 };
+  } catch (e) { /* storage unavailable */ }
+  return { day, sales: 0, revenue: 0 };
+}
+function saveDaily() { try { localStorage.setItem(STORE_KEY, JSON.stringify(daily)); } catch (e) { /* ignore */ } }
+const daily = loadDaily();
+
+// ---- Sale state ----
+const state = { stage: "items", items: [], total: 0, discount: 0, paid: 0, firstPayment: 0 };
+const lineTotal = it => it.price * it.qty;
+const subtotal = () => state.items.reduce((s, it) => s + lineTotal(it), 0);
+
+const form = $("entry-form"), priceIn = $("amount"), qtyIn = $("qty"), nameIn = $("name");
+const message = $("message"), itemList = $("item-list");
+
+function say(text, type) {
+  message.textContent = text;
+  message.className = "message" + (type ? " " + type : "");
+}
+
+// ---- Receipt rendering ----
+const row = (l, v, cls = "") => `<div class="line ${cls}"><span>${l}</span><i class="dots"></i><b>${v}</b></div>`;
+
+function renderReceipt() {
+  const canRemove = state.stage === "items";
+  itemList.innerHTML = state.items.map((it, i) =>
+    `<li class="line"><span>${it.qty} × ${esc(it.name)}</span><i class="dots"></i><b>${peso(lineTotal(it))}</b>` +
+    (canRemove ? `<button class="rm" type="button" data-i="${i}" aria-label="Remove ${esc(it.name)}">×</button>` : "") + `</li>`
+  ).join("");
+  $("empty").hidden = state.items.length > 0;
+
+  let rows = "";
+  if (state.items.length) rows += row("Products Entered", state.items.length);
+  if (state.stage === "items") {
+    if (state.items.length) rows += row("Running total", peso(subtotal()));
+  } else {
+    rows += row("Grand Total Sales", peso(subtotal()));
+    rows += row("Discount (5%)", state.discount > 0 ? "-" + peso(state.discount) : peso(0));
+    rows += row("Final Price", peso(state.total), "grand");
+    if (state.paid > 0) {
+      rows += row("Amount Paid", peso(state.paid));
+      if (state.firstPayment < state.total) rows += row("Additional Payment", peso(state.paid - state.firstPayment));
+      rows += state.paid >= state.total
+        ? row("Change", peso(state.paid - state.total), "change")
+        : row("Remaining Balance", peso(state.total - state.paid), "balance");
+    }
+  }
+  $("totals").innerHTML = rows;
+  $("totals").hidden = !rows;
+  $("thanks").hidden = state.stage !== "done";
+}
+
+function renderStage() {
+  const s = state.stage;
+  $("entry-form").hidden = s === "done";
+  $("fields").dataset.stage = s;
+  $("name-wrap").hidden = $("qty-wrap").hidden = s !== "items";
+  $("quick").hidden = s !== "payment";
+  $("result").hidden = s !== "done";
+  $("new-btn").hidden = s !== "done";
+  $("cancel-btn").hidden = s === "done" || state.items.length === 0;
+
+  if (s === "items") {
+    $("step-title").textContent = "Item price";
+    $("step-help").textContent = "Type the product, its price and how many. Enter a price of 0 when there are no more items.";
+    $("amount-label").textContent = "Price per piece (₱)";
+    $("submit-btn").textContent = "Add item";
+  } else if (s === "payment") {
+    const more = state.paid > 0;
+    $("step-title").textContent = "Payment";
+    $("step-help").textContent = more
+      ? `Remaining balance: ${peso(state.total - state.paid)}. Collect it from the customer and enter the amount.`
+      : `Final price: ${peso(state.total)}. Enter the payment or tap a quick amount.`;
+    $("amount-label").textContent = more ? "Collect remaining balance (₱)" : "Payment (₱)";
+    $("submit-btn").textContent = state.paid > 0 ? "Collect balance" : "Calculate change";
+    $("quick").innerHTML = [["exact", "Exact"], [10000, "₱100"], [20000, "₱200"], [50000, "₱500"], [100000, "₱1,000"]]
+      .map(([v, t]) => `<button type="button" data-amt="${v}">${t}</button>`).join("");
+  } else {
+    $("step-title").textContent = "Paid. Salamat!";
+    $("step-help").textContent = "The sale is complete. Ready for the next customer.";
+    $("result-amount").textContent = peso(state.paid - state.total);
+  }
+  $("today").textContent = `Today: ${daily.sales} sale${daily.sales === 1 ? "" : "s"} · ${peso(daily.revenue)}`;
+
+  renderReceipt();
+  nameIn.value = ""; priceIn.value = ""; qtyIn.value = "1";
+  if (s !== "done") priceIn.focus();
+}
+
+// ---- Logic ----
+function handleItem(price) {
+  if (price === 0) {
+    if (!state.items.length) return say("Add at least one item before entering 0.", "error");
+    const sub = subtotal();
+    state.discount = sub >= DISCOUNT_THRESHOLD ? Math.round(sub * DISCOUNT_RATE) : 0;
+    state.total = sub - state.discount;
+    state.stage = "payment";
+    say(state.discount > 0
+      ? `Purchase reached ${peso(DISCOUNT_THRESHOLD)}. 5% discount applied.`
+      : "No discount. It applies at ₱200.00 or more.", "info");
+    return renderStage();
+  }
+  const qty = Number(qtyIn.value);
+  if (!Number.isInteger(qty) || qty < 1) return say("Quantity must be a whole number, 1 or more.", "error");
+  const name = nameIn.value.trim() || `Item ${state.items.length + 1}`;
+  state.items.push({ name, price, qty });
+  say(`Added ${qty} × ${name} = ${peso(price * qty)}.`, "info");
+  renderStage();
+}
+
+function handlePayment(value) {
+  if (value <= 0) return say("Enter an amount greater than 0.", "error");
+  if (state.paid === 0) state.firstPayment = value;
+  state.paid += value;
+  if (state.paid >= state.total) {
+    state.stage = "done";
+    daily.sales += 1; daily.revenue += state.total;
+    saveDaily();
+    say("");
+  } else {
+    say(`Remaining Balance: ${peso(state.total - state.paid)}. Collect the remaining balance.`, "error");
+  }
+  renderStage();
+}
+
+function newSale() {
+  Object.assign(state, { stage: "items", items: [], total: 0, discount: 0, paid: 0, firstPayment: 0 });
+  say("");
+  renderStage();
+}
+
+form.addEventListener("submit", e => {
+  e.preventDefault();
+  const raw = priceIn.value.trim(), num = parseFloat(raw);
+  if (raw === "" || Number.isNaN(num)) return say("Enter a number.", "error");
+  if (num < 0) return say("Amount can't be negative.", "error");
+  state.stage === "items" ? handleItem(toCentavos(raw)) : handlePayment(toCentavos(raw));
+  if (message.classList.contains("error")) priceIn.focus();
+});
+
+$("quick").addEventListener("click", e => {
+  const b = e.target.closest("button[data-amt]");
+  if (!b) return;
+  handlePayment(b.dataset.amt === "exact" ? state.total - state.paid : Number(b.dataset.amt));
+});
+
+itemList.addEventListener("click", e => {
+  const b = e.target.closest(".rm");
+  if (!b) return;
+  const [gone] = state.items.splice(Number(b.dataset.i), 1);
+  say(`Removed ${gone.name}.`, "info");
+  renderStage();
+});
+
+$("cancel-btn").addEventListener("click", () => {
+  if (confirm("Cancel this sale and clear all items?")) newSale();
+});
+$("new-btn").addEventListener("click", newSale);
+
+renderStage();
+  </script>
+</body>
+</html>
